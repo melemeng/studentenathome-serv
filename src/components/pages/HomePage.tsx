@@ -6,6 +6,7 @@ import { ArrowRight, Quotes } from '@phosphor-icons/react'
 import { siteData } from '@/lib/data'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import landingPageBg from '@/assets/images/landingpage.png'
 
 interface HomePageProps {
   onNavigate: (page: string) => void
@@ -46,7 +47,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://i.imgur.com/8KqZ9Xm.jpeg)',
+            backgroundImage: `url(${landingPageBg})`,
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-accent/60" />
