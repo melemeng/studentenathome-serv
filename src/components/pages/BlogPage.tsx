@@ -203,46 +203,64 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
 
   // SEO: update title and meta description per view
   useEffect(() => {
-    const setMeta = (title: string, description?: string) => {
-      document.title = title;
-      let desc = document.querySelector('meta[name="description"]');
-      if (!desc) {
-        desc = document.createElement("meta");
-        desc.setAttribute("name", "description");
-        document.head.appendChild(desc);
-      }
-      if (description) desc.setAttribute("content", description);
-    };
-
     if (selectedId) {
       const post = currentPosts.find((p) => p.id === selectedId);
       if (post) {
-        setMeta(
-          `${post.title} | StudentenAtHome`,
-          post.excerpt || post.content?.slice(0, 150)
-        );
+        // Import setMeta dynamically
+        import("@/lib/seo").then(({ default: setMeta }) => {
+          setMeta({
+            title: `${post.title} | StudentenAtHome`,
+            description:
+              post.excerpt ||
+              post.content?.slice(0, 150).replace(/<[^>]+>/g, ""),
+            canonical: `/blog/${post.id}`,
+            type: "article",
+            jsonLd: {
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              headline: post.title,
+              description: post.excerpt,
+              author: {
+                "@type": "Person",
+                name: post.author,
+              },
+              datePublished: post.date,
+              publisher: {
+                "@type": "Organization",
+                name: "StudentenAtHome",
+                url: "https://www.studentenathome.de",
+              },
+            },
+          });
+        });
         return;
       }
     }
 
     // default blog page meta
-    setMeta(
-      "Tech-Blog – StudentenAtHome",
-      "Aktuelle Artikel und Tipps zu Technik, Sicherheit und Netzwerken von StudentenAtHome."
-    );
+    import("@/lib/seo").then(({ default: setMeta }) => {
+      setMeta({
+        title: "Tech-Blog – StudentenAtHome",
+        description:
+          "Aktuelle Artikel und Tipps zu Technik, Sicherheit und Netzwerken von StudentenAtHome.",
+        canonical: "/blog",
+        type: "website",
+      });
+    });
   }, [selectedId, currentPosts]);
 
+  // Parse blog post ID from URL pathname (not hash)
   useEffect(() => {
-    const handleHash = () => {
-      const hash = window.location.hash || "";
-      const match = hash.match(/#\/blog\/(.+)/);
-      if (match) setSelectedId(match[1]);
-      else setSelectedId(null);
-    };
-
-    handleHash();
-    window.addEventListener("hashchange", handleHash);
-    return () => window.removeEventListener("hashchange", handleHash);
+    const path = window.location.pathname.replace(
+      /^\/studentenathome-serv/,
+      ""
+    );
+    const match = path.match(/^\/blog\/(.+)/);
+    if (match) {
+      setSelectedId(decodeURIComponent(match[1]));
+    } else if (path === "/blog" || path === "/blog/") {
+      setSelectedId(null);
+    }
   }, []);
 
   useEffect(() => {
@@ -280,7 +298,8 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
           const created = await res.json();
           setPosts((p = []) => [...p, created]);
           setShowForm(false);
-          window.location.hash = "#/blog";
+          window.history.pushState({}, "", "/blog");
+          setSelectedId(null);
           return;
         }
       }
@@ -291,7 +310,8 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
     // Fallback: local-only
     setPosts((p = []) => [...p, post]);
     setShowForm(false);
-    window.location.hash = "#/blog";
+    window.history.pushState({}, "", "/blog");
+    setSelectedId(null);
   };
 
   const renderPostList = () => (
@@ -361,7 +381,12 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
                 </div>
                 <div className="text-xs text-muted-foreground">{post.date}</div>
                 <a
-                  href={`#/blog/${post.id}`}
+                  href={`/blog/${post.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.history.pushState({}, "", `/blog/${post.id}`);
+                    setSelectedId(post.id);
+                  }}
                   className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-semibold transition-colors group/link"
                 >
                   Zum Artikel
@@ -416,7 +441,15 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
       </div>
       <div dangerouslySetInnerHTML={{ __html: post.content }} />
       <div className="mt-8">
-        <a href="#/blog" className="text-accent font-semibold">
+        <a
+          href="/blog"
+          onClick={(e) => {
+            e.preventDefault();
+            window.history.pushState({}, "", "/blog");
+            setSelectedId(null);
+          }}
+          className="text-accent font-semibold"
+        >
           Zurück zur Übersicht
         </a>
       </div>

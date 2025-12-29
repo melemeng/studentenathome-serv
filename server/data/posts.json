@@ -1,1 +1,36 @@
-[]
+[
+  {
+    "id": "1",
+    "slug": "cybersecurity-tipps",
+    "title": "Cybersecurity für Privatpersonen: Die 5 wichtigsten Tipps",
+    "excerpt": "Erfahren Sie, wie Sie Ihre persönlichen Daten im Internet schützen",
+    "category": "Sicherheit",
+    "author": "StudentenAtHome Team",
+    "date": "15. Dezember 2024",
+    "readTime": "8 Min",
+    "publishedAt": "2024-12-15T10:00:00.000Z",
+    "updatedAt": "2024-12-20T14:30:00.000Z"
+  },
+  {
+    "id": "2",
+    "slug": "windows-vs-macos",
+    "title": "Windows oder macOS: Welches Betriebssystem passt zu mir?",
+    "excerpt": "Ein Vergleich der beiden beliebtesten Betriebssysteme",
+    "category": "Betriebssysteme",
+    "author": "Tim Müller",
+    "date": "10. Dezember 2024",
+    "readTime": "10 Min",
+    "publishedAt": "2024-12-10T09:00:00.000Z"
+  },
+  {
+    "id": "3",
+    "slug": "wlan-optimieren",
+    "title": "WLAN-Probleme? So optimieren Sie Ihre Netzwerkgeschwindigkeit",
+    "excerpt": "Praktische Tipps zur Verbesserung Ihrer WLAN-Signalstärke",
+    "category": "Netzwerk",
+    "author": "Sophie Weber",
+    "date": "5. Dezember 2024",
+    "readTime": "7 Min",
+    "publishedAt": "2024-12-05T11:00:00.000Z"
+  }
+]

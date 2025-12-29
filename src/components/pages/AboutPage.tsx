@@ -26,7 +26,8 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
     setMeta({
       title: `${sections[0].title} | ${siteData.site.brandNames[1]}`,
       description: sections[0].content?.[0] || "Über StudentenAtHome",
-      canonical: "https://www.studentenathome.de/about",
+      canonical: "/about",
+      type: "website",
     });
   }, [sections]);
 

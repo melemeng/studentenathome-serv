@@ -20,12 +20,31 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
   useEffect(() => {
     setMeta({
-      title: `${
-        siteData.site.brandNames[1]
-      } – ${siteData.pages.home.hero.headline.split("–")[0].trim()}`,
+      title: `${siteData.site.brandNames[1]} – Professioneller Tech-Support in Dresden`,
       description:
         "StudentenAtHome: Professioneller, lokaler Tech-Support für Privatpersonen und Studierende in Dresden. Hilfe bei Netzwerken, Sicherheit und Einrichtung.",
-      canonical: "https://www.studentenathome.de/",
+      canonical: "/",
+      type: "website",
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        name: "StudentenAtHome",
+        description:
+          "Professioneller Tech-Support von Informatikstudenten in Dresden",
+        url: "https://www.studentenathome.de",
+        telephone: "+49-176-75444136",
+        email: "support@studentenathome.de",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Dresden",
+          addressCountry: "DE",
+        },
+        priceRange: "€€",
+        areaServed: {
+          "@type": "City",
+          name: "Dresden",
+        },
+      },
     });
   }, []);
 

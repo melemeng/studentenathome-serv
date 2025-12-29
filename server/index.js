@@ -11,6 +11,8 @@ const DATA_DIR = path.join(__dirname, "data");
 const POSTS_FILE = path.join(DATA_DIR, "posts.json");
 
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "demo-token";
+const CANONICAL_BASE =
+  process.env.CANONICAL_BASE_URL || "https://www.studentenathome.de";
 
 function readPosts() {
   try {
@@ -39,35 +41,55 @@ app.get("/api/posts", (req, res) => {
   res.json(posts);
 });
 
+// robots.txt
+app.get("/robots.txt", (req, res) => {
+  const content = [
+    "User-agent: *",
+    "Allow: /",
+    "",
+    `Sitemap: ${CANONICAL_BASE}/sitemap.xml`,
+  ].join("\n");
+  res.type("text/plain").send(content);
+});
+
 // Dynamic sitemap including blog posts
 app.get("/sitemap.xml", (req, res) => {
   try {
     const posts = readPosts();
-    const base = req.protocol + "://" + req.get("host");
+    const base = CANONICAL_BASE;
     const urls = [
-      { loc: base + "/", changefreq: "weekly", priority: "1.0" },
-      { loc: base + "/solutions", changefreq: "monthly", priority: "0.8" },
-      { loc: base + "/about", changefreq: "monthly", priority: "0.8" },
-      { loc: base + "/contact", changefreq: "monthly", priority: "0.7" },
-      { loc: base + "/blog", changefreq: "daily", priority: "0.9" },
+      { loc: base + "/", changefreq: "daily", priority: "1.0" },
+      { loc: base + "/solutions", changefreq: "weekly", priority: "0.8" },
+      { loc: base + "/about", changefreq: "monthly", priority: "0.6" },
+      { loc: base + "/contact", changefreq: "monthly", priority: "0.6" },
+      { loc: base + "/blog", changefreq: "daily", priority: "0.8" },
+      { loc: base + "/faq", changefreq: "monthly", priority: "0.5" },
+      { loc: base + "/datenschutz", changefreq: "yearly", priority: "0.4" },
+      { loc: base + "/impressum", changefreq: "yearly", priority: "0.4" },
+      { loc: base + "/jobs", changefreq: "monthly", priority: "0.5" },
     ];
 
     posts.forEach((p) => {
-      if (p && p.id) {
+      if (p && (p.slug || p.id)) {
+        const lastmod =
+          p.updatedAt || p.publishedAt || new Date().toISOString();
         urls.push({
-          loc: `${base}/blog/${encodeURIComponent(p.id)}`,
-          changefreq: "monthly",
-          priority: "0.6",
+          loc: `${base}/blog/${encodeURIComponent(p.slug || p.id)}`,
+          changefreq: "weekly",
+          priority: "0.7",
+          lastmod: lastmod,
         });
       }
     });
 
-    const now = new Date().toISOString();
+    const now = new Date().toISOString().split("T")[0];
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
-      .map(
-        (u) =>
-          `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`
-      )
+      .map((u) => {
+        const lastmod = u.lastmod
+          ? new Date(u.lastmod).toISOString().split("T")[0]
+          : now;
+        return `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`;
+      })
       .join("\n")}\n</urlset>`;
 
     res.header("Content-Type", "application/xml");

@@ -25,7 +25,8 @@ export function SolutionsPage({ onNavigate }: SolutionsPageProps) {
     setMeta({
       title: `${title} | ${siteData.site.brandNames[1]}`,
       description: intro,
-      canonical: "https://www.studentenathome.de/solutions",
+      canonical: "/solutions",
+      type: "website",
     });
   }, [title, intro]);
 

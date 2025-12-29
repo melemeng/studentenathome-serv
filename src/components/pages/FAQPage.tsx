@@ -14,7 +14,20 @@ export function FAQPage() {
       title: `FAQ | StudentenAtHome`,
       description:
         "Häufig gestellte Fragen zu unseren Services, Preisen und Support-Abläufen bei StudentenAtHome.",
-      canonical: "https://www.studentenathome.de/faq",
+      canonical: "/faq",
+      type: "website",
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answer,
+          },
+        })),
+      },
     });
   }, []);
 

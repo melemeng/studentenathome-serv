@@ -80,7 +80,8 @@ export function ContactPage() {
     setMeta({
       title: `${title} | ${siteData.site.brandNames[1]}`,
       description: ctaIntro,
-      canonical: "https://www.studentenathome.de/contact",
+      canonical: "/contact",
+      type: "website",
     });
   }, [title, ctaIntro]);
 
