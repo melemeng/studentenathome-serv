@@ -24,7 +24,7 @@ This project is configured to automatically deploy to GitHub Pages when changes 
    - **Source**: GitHub Actions
 4. The workflow will automatically deploy your site when you push to the `main` branch
 
-Your site will be available at: `https://melemeng.github.io/studentenathome-serv/`
+Your site will be available at: `https://studentenathome.de/`
 
 ### Manual Deployment
 
