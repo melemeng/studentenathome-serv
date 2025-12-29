@@ -2,8 +2,13 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
+const compression = require("compression");
 
 const app = express();
+
+// Compression middleware (Gzip)
+app.use(compression());
+
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 
@@ -12,7 +17,7 @@ const POSTS_FILE = path.join(DATA_DIR, "posts.json");
 
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "demo-token";
 const CANONICAL_BASE =
-  process.env.CANONICAL_BASE_URL || "https://www.studentenathome.de";
+  process.env.CANONICAL_BASE_URL || "https://studentenathome.de";
 
 function readPosts() {
   try {
@@ -38,6 +43,8 @@ function writePosts(posts) {
 
 app.get("/api/posts", (req, res) => {
   const posts = readPosts();
+  // Add cache headers for better performance
+  res.set("Cache-Control", "public, max-age=300"); // 5 minutes
   res.json(posts);
 });
 

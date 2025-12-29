@@ -2,16 +2,27 @@ import { Toaster } from "@/components/ui/sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { HomePage } from "@/components/pages/HomePage";
-import { SolutionsPage } from "@/components/pages/SolutionsPage";
-import { AboutPage } from "@/components/pages/AboutPage";
-import { ContactPage } from "@/components/pages/ContactPage";
-import { ImpressumPage } from "@/components/pages/ImpressumPage";
-import { FAQPage } from "@/components/pages/FAQPage";
-import { PrivacyPage } from "@/components/pages/PrivacyPage";
-import { BlogPage } from "@/components/pages/BlogPage";
-import { JobsPage } from "@/components/pages/JobsPage";
-import { LoginPage } from "@/components/pages/LoginPage";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+
+// Lazy load pages for better performance
+const SolutionsPage = lazy(() => import("@/components/pages/SolutionsPage"));
+const AboutPage = lazy(() => import("@/components/pages/AboutPage"));
+const ContactPage = lazy(() => import("@/components/pages/ContactPage"));
+const ImpressumPage = lazy(() => import("@/components/pages/ImpressumPage"));
+const FAQPage = lazy(() => import("@/components/pages/FAQPage"));
+const PrivacyPage = lazy(() => import("@/components/pages/PrivacyPage"));
+const BlogPage = lazy(() => import("@/components/pages/BlogPage"));
+const JobsPage = lazy(() => import("@/components/pages/JobsPage"));
+const LoginPage = lazy(() => import("@/components/pages/LoginPage"));
+
+// Loading component
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+    </div>
+  );
+}
 
 // Map URL pathname to page identifier
 function pathToPage(path: string): string {
@@ -96,7 +107,9 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header currentPage={currentPage || "home"} onNavigate={handleNavigate} />
-      <main className="flex-1">{renderPage()}</main>
+      <main className="flex-1">
+        <Suspense fallback={<PageLoader />}>{renderPage()}</Suspense>
+      </main>
       <Footer onNavigate={handleNavigate} />
       <Toaster position="top-center" />
     </div>
