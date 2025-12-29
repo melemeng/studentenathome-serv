@@ -1,74 +1,88 @@
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Phone, Envelope, MapPin } from '@phosphor-icons/react'
-import { siteData } from '@/lib/data'
-import { useState } from 'react'
-import { toast } from 'sonner'
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Phone, Envelope, MapPin } from "@phosphor-icons/react";
+import { siteData } from "@/lib/data";
+import { useState, useEffect } from "react";
+import setMeta from "@/lib/seo";
+import { toast } from "sonner";
 
 export function ContactPage() {
-  const { title, howItWorks, ctaIntro, details, form } = siteData.pages.contact
-  
+  const { title, howItWorks, ctaIntro, details, form } = siteData.pages.contact;
+
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
-    message: ''
-  })
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    message: "",
+  });
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target
-    setFormData(prev => ({ ...prev, [id]: value }))
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
     if (errors[id]) {
-      setErrors(prev => ({ ...prev, [id]: '' }))
+      setErrors((prev) => ({ ...prev, [id]: "" }));
     }
-  }
+  };
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {}
-    
-    if (!formData.firstName.trim()) newErrors.firstName = 'Vornname ist erforderlich'
-    if (!formData.lastName.trim()) newErrors.lastName = 'Familienname ist erforderlich'
-    if (!formData.email.trim()) {
-      newErrors.email = 'E-Mail ist erforderlich'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Ungültige E-Mail-Adresse'
-    }
-    if (!formData.message.trim()) newErrors.message = 'Nachricht ist erforderlich'
+    const newErrors: Record<string, string> = {};
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    if (!formData.firstName.trim())
+      newErrors.firstName = "Vornname ist erforderlich";
+    if (!formData.lastName.trim())
+      newErrors.lastName = "Familienname ist erforderlich";
+    if (!formData.email.trim()) {
+      newErrors.email = "E-Mail ist erforderlich";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Ungültige E-Mail-Adresse";
+    }
+    if (!formData.message.trim())
+      newErrors.message = "Nachricht ist erforderlich";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (validateForm()) {
-      toast.success('Vielen Dank! Ihre Nachricht wurde gesendet.')
+      toast.success("Vielen Dank! Ihre Nachricht wurde gesendet.");
       setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phoneNumber: '',
-        message: ''
-      })
+        firstName: "",
+        lastName: "",
+        email: "",
+        phoneNumber: "",
+        message: "",
+      });
     } else {
-      toast.error('Bitte füllen Sie alle erforderlichen Felder aus.')
+      toast.error("Bitte füllen Sie alle erforderlichen Felder aus.");
     }
-  }
+  };
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true },
-    transition: { duration: 0.5 }
-  }
+    transition: { duration: 0.5 },
+  };
+
+  useEffect(() => {
+    setMeta({
+      title: `${title} | ${siteData.site.brandNames[1]}`,
+      description: ctaIntro,
+      canonical: "https://www.studentenathome.de/contact",
+    });
+  }, [title, ctaIntro]);
 
   return (
     <div className="min-h-screen">
@@ -87,10 +101,7 @@ export function ContactPage() {
             </p>
           </motion.div>
 
-          <motion.div
-            {...fadeInUp}
-            className="max-w-4xl mx-auto mb-16"
-          >
+          <motion.div {...fadeInUp} className="max-w-4xl mx-auto mb-16">
             <Card className="p-8 border-border/50">
               <h2 className="text-2xl font-bold mb-6 text-foreground text-center">
                 So funktioniert's
@@ -130,7 +141,9 @@ export function ContactPage() {
                     <MapPin className="h-6 w-6 text-accent" weight="fill" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">Adresse</h3>
+                    <h3 className="font-semibold text-foreground mb-1">
+                      Adresse
+                    </h3>
                     <p className="text-muted-foreground">{details.address}</p>
                   </div>
                 </div>
@@ -140,8 +153,10 @@ export function ContactPage() {
                     <Phone className="h-6 w-6 text-accent" weight="fill" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">Telefon</h3>
-                    <a 
+                    <h3 className="font-semibold text-foreground mb-1">
+                      Telefon
+                    </h3>
+                    <a
                       href={details.telephoneLink}
                       className="text-accent hover:underline"
                     >
@@ -155,8 +170,10 @@ export function ContactPage() {
                     <Envelope className="h-6 w-6 text-accent" weight="fill" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">E-Mail</h3>
-                    <a 
+                    <h3 className="font-semibold text-foreground mb-1">
+                      E-Mail
+                    </h3>
+                    <a
                       href={details.emailLink}
                       className="text-accent hover:underline"
                     >
@@ -186,10 +203,12 @@ export function ContactPage() {
                         type="text"
                         value={formData.firstName}
                         onChange={handleChange}
-                        className={errors.firstName ? 'border-destructive' : ''}
+                        className={errors.firstName ? "border-destructive" : ""}
                       />
                       {errors.firstName && (
-                        <p className="text-sm text-destructive mt-1">{errors.firstName}</p>
+                        <p className="text-sm text-destructive mt-1">
+                          {errors.firstName}
+                        </p>
                       )}
                     </div>
 
@@ -200,10 +219,12 @@ export function ContactPage() {
                         type="text"
                         value={formData.lastName}
                         onChange={handleChange}
-                        className={errors.lastName ? 'border-destructive' : ''}
+                        className={errors.lastName ? "border-destructive" : ""}
                       />
                       {errors.lastName && (
-                        <p className="text-sm text-destructive mt-1">{errors.lastName}</p>
+                        <p className="text-sm text-destructive mt-1">
+                          {errors.lastName}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -215,10 +236,12 @@ export function ContactPage() {
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={errors.email ? 'border-destructive' : ''}
+                      className={errors.email ? "border-destructive" : ""}
                     />
                     {errors.email && (
-                      <p className="text-sm text-destructive mt-1">{errors.email}</p>
+                      <p className="text-sm text-destructive mt-1">
+                        {errors.email}
+                      </p>
                     )}
                   </div>
 
@@ -239,10 +262,12 @@ export function ContactPage() {
                       rows={5}
                       value={formData.message}
                       onChange={handleChange}
-                      className={errors.message ? 'border-destructive' : ''}
+                      className={errors.message ? "border-destructive" : ""}
                     />
                     {errors.message && (
-                      <p className="text-sm text-destructive mt-1">{errors.message}</p>
+                      <p className="text-sm text-destructive mt-1">
+                        {errors.message}
+                      </p>
                     )}
                   </div>
 
@@ -260,5 +285,5 @@ export function ContactPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

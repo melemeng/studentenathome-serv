@@ -1,6 +1,16 @@
 import { Separator } from "@/components/ui/separator";
+import { useEffect } from "react";
+import setMeta from "@/lib/seo";
 
 export function ImpressumPage() {
+  useEffect(() => {
+    setMeta({
+      title: `Impressum | StudentenAtHome`,
+      description:
+        "Rechtliche Informationen zum Betreiber von StudentenAtHome, Kontakt- und Firmenangaben gemäß §5 TMG.",
+      canonical: "https://www.studentenathome.de/impressum",
+    });
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
       <div className="container mx-auto max-w-4xl px-6 py-20">

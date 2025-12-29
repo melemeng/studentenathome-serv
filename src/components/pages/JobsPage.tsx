@@ -1,4 +1,6 @@
 import { Separator } from "@/components/ui/separator";
+import { useEffect } from "react";
+import setMeta from "@/lib/seo";
 import {
   Card,
   CardContent,
@@ -133,6 +135,14 @@ const jobListings: JobListing[] = [
 ];
 
 export function JobsPage() {
+  useEffect(() => {
+    setMeta({
+      title: `Karriere | StudentenAtHome`,
+      description:
+        "Offene Positionen und Vorteile einer Mitarbeit bei StudentenAtHome. Werde Teil unseres Teams in Dresden oder remote.",
+      canonical: "https://www.studentenathome.de/jobs",
+    });
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
       <div className="container mx-auto max-w-5xl px-6 py-20">

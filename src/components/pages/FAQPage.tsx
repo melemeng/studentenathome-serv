@@ -1,4 +1,6 @@
 import { Separator } from "@/components/ui/separator";
+import { useEffect } from "react";
+import setMeta from "@/lib/seo";
 import {
   Accordion,
   AccordionContent,
@@ -84,6 +86,15 @@ export function FAQPage() {
     },
   ];
 
+  useEffect(() => {
+    setMeta({
+      title: `FAQ | StudentenAtHome`,
+      description:
+        "Häufig gestellte Fragen zu unseren Services, Preisen und Support-Abläufen bei StudentenAtHome.",
+      canonical: "https://www.studentenathome.de/faq",
+    });
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
       <div className="container mx-auto max-w-4xl px-6 py-20">
@@ -151,3 +162,13 @@ export function FAQPage() {
     </div>
   );
 }
+
+// set meta
+useEffect(() => {
+  setMeta({
+    title: `FAQ | StudentenAtHome`,
+    description:
+      "Häufig gestellte Fragen zu unseren Services, Preisen und Support-Abläufen bei StudentenAtHome.",
+    canonical: "https://www.studentenathome.de/faq",
+  });
+}, []);

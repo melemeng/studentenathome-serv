@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,6 +24,18 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
   const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    // set meta for login page
+    import("@/lib/seo").then(({ default: setMeta }) => {
+      setMeta({
+        title: `Anmelden | StudentenAtHome`,
+        description:
+          "Melden Sie sich bei Ihrem StudentenAtHome Konto an, um Beiträge zu erstellen und Buchungen zu verwalten.",
+        canonical: "https://www.studentenathome.de/login",
+      });
+    });
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -48,9 +60,10 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
         return;
       }
 
-      // Simulate successful login
+      // Simulate successful login — store a demo auth token
       localStorage.setItem("userEmail", email);
       localStorage.setItem("userLoggedIn", "true");
+      localStorage.setItem("authToken", "demo-token");
       setIsLoggedIn(true);
       setIsLoading(false);
     }, 1000);
@@ -152,6 +165,7 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
               onClick={() => {
                 localStorage.removeItem("userEmail");
                 localStorage.removeItem("userLoggedIn");
+                localStorage.removeItem("authToken");
                 setIsLoggedIn(false);
                 setEmail("");
                 setPassword("");

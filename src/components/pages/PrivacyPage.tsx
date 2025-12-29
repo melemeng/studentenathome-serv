@@ -1,6 +1,16 @@
 import { Separator } from "@/components/ui/separator";
+import { useEffect } from "react";
+import setMeta from "@/lib/seo";
 
 export function PrivacyPage() {
+  useEffect(() => {
+    setMeta({
+      title: `Datenschutz | ${"StudentenAtHome"}`,
+      description:
+        "Informationen zur Verarbeitung personenbezogener Daten, Cookies, Tracking und Ihren Rechten bei StudentenAtHome.",
+      canonical: "https://www.studentenathome.de/datenschutz",
+    });
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
       <div className="container mx-auto max-w-4xl px-6 py-20">

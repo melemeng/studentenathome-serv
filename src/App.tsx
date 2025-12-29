@@ -44,7 +44,7 @@ function App() {
       case "datenschutz":
         return <PrivacyPage />;
       case "blog":
-        return <BlogPage />;
+        return <BlogPage onNavigate={handleNavigate} />;
       case "jobs":
         return <JobsPage />;
       case "login":

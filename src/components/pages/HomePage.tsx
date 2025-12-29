@@ -1,50 +1,63 @@
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { ArrowRight, Quotes } from '@phosphor-icons/react'
-import { siteData } from '@/lib/data'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import landingPageBg from '@/assets/images/landingpage.png'
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ArrowRight, Quotes } from "@phosphor-icons/react";
+import { siteData } from "@/lib/data";
+import { useState, useEffect } from "react";
+import setMeta from "@/lib/seo";
+import { toast } from "sonner";
+import landingPageBg from "@/assets/images/landingpage.png";
 
 interface HomePageProps {
-  onNavigate: (page: string) => void
+  onNavigate: (page: string) => void;
 }
 
 export function HomePage({ onNavigate }: HomePageProps) {
-  const { hero, valueProps, highlight, testimonial, newsletter } = siteData.pages.home
-  const [email, setEmail] = useState('')
+  const { hero, valueProps, highlight, testimonial, newsletter } =
+    siteData.pages.home;
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    setMeta({
+      title: `${
+        siteData.site.brandNames[1]
+      } – ${siteData.pages.home.hero.headline.split("–")[0].trim()}`,
+      description:
+        "StudentenAtHome: Professioneller, lokaler Tech-Support für Privatpersonen und Studierende in Dresden. Hilfe bei Netzwerken, Sicherheit und Einrichtung.",
+      canonical: "https://www.studentenathome.de/",
+    });
+  }, []);
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (email && email.includes('@')) {
-      toast.success('Vielen Dank für Ihre Anmeldung!')
-      setEmail('')
+    e.preventDefault();
+    if (email && email.includes("@")) {
+      toast.success("Vielen Dank für Ihre Anmeldung!");
+      setEmail("");
     } else {
-      toast.error('Bitte geben Sie eine gültige E-Mail-Adresse ein.')
+      toast.error("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
     }
-  }
+  };
 
   const handleCTAClick = (link: string) => {
-    if (link.includes('/service')) {
-      onNavigate('solutions')
-    } else if (link.includes('/contact')) {
-      onNavigate('contact')
+    if (link.includes("/service")) {
+      onNavigate("solutions");
+    } else if (link.includes("/contact")) {
+      onNavigate("contact");
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5 }
-  }
+    transition: { duration: 0.5 },
+  };
 
   return (
     <div className="min-h-screen">
       <section className="relative overflow-hidden py-20 md:py-32 min-h-[600px] md:min-h-[700px] flex items-center">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `url(${landingPageBg})`,
@@ -52,12 +65,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
         />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-accent/60" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,oklch(0.35_0.08_250_/_0.3),transparent_50%)]" />
-        
+
         <div className="container relative mx-auto max-w-7xl px-6">
-          <motion.div 
-            className="max-w-4xl mx-auto text-center"
-            {...fadeInUp}
-          >
+          <motion.div className="max-w-4xl mx-auto text-center" {...fadeInUp}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-8 text-white drop-shadow-lg">
               {hero.headline}
             </h1>
@@ -102,9 +112,12 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   </p>
                   <button
                     onClick={() => {
-                      if (prop.more.includes('/service')) onNavigate('solutions')
-                      else if (prop.more.includes('/about')) onNavigate('about')
-                      else if (prop.more.includes('/contact')) onNavigate('contact')
+                      if (prop.more.includes("/service"))
+                        onNavigate("solutions");
+                      else if (prop.more.includes("/about"))
+                        onNavigate("about");
+                      else if (prop.more.includes("/contact"))
+                        onNavigate("contact");
                     }}
                     className="text-accent font-medium inline-flex items-center gap-1 hover:gap-2 transition-all"
                   >
@@ -119,7 +132,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
       <section className="py-20 bg-gradient-to-br from-accent/10 via-accent/5 to-background relative overflow-hidden">
         <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_60px,oklch(0.68_0.18_25_/_0.03)_60px,oklch(0.68_0.18_25_/_0.03)_61px)]" />
-        
+
         <div className="container relative mx-auto max-w-5xl px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -155,7 +168,10 @@ export function HomePage({ onNavigate }: HomePageProps) {
             viewport={{ once: true }}
           >
             <Card className="p-8 md:p-12 relative overflow-hidden border-border/50 bg-gradient-to-br from-secondary/50 to-background">
-              <Quotes className="absolute top-6 right-6 h-16 w-16 text-accent/20" weight="fill" />
+              <Quotes
+                className="absolute top-6 right-6 h-16 w-16 text-accent/20"
+                weight="fill"
+              />
               <blockquote className="relative">
                 <p className="text-lg md:text-xl leading-relaxed text-foreground mb-6 italic">
                   "{testimonial.quote}"
@@ -171,7 +187,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
       <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,oklch(0.45_0.08_250),transparent_70%)]" />
-        
+
         <div className="container relative mx-auto max-w-4xl px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -185,7 +201,10 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <p className="text-lg opacity-90 mb-8 leading-relaxed">
               {newsletter.description}
             </p>
-            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <form
+              onSubmit={handleNewsletterSubmit}
+              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+            >
               <Input
                 type="email"
                 id="newsletter-email"
@@ -207,5 +226,5 @@ export function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
     </div>
-  )
+  );
 }

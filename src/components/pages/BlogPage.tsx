@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Clock, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useKV } from "@github/spark/hooks";
 
 interface BlogPost {
   id: string;
@@ -20,7 +22,7 @@ interface BlogPost {
   content: string;
 }
 
-const blogPosts: BlogPost[] = [
+const defaultBlogPosts: BlogPost[] = [
   {
     id: "1",
     title:
@@ -188,88 +190,340 @@ const blogPosts: BlogPost[] = [
   },
 ];
 
-export function BlogPage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
-      <div className="container mx-auto max-w-6xl px-6 py-20">
-        <div className="mb-12">
+interface BlogPageProps {
+  onNavigate?: (page: string) => void;
+}
+
+export function BlogPage({ onNavigate }: BlogPageProps) {
+  const [posts, setPosts] = useKV<BlogPost[]>("blog-posts", defaultBlogPosts);
+  const [showForm, setShowForm] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // SEO: update title and meta description per view
+  useEffect(() => {
+    const setMeta = (title: string, description?: string) => {
+      document.title = title;
+      let desc = document.querySelector('meta[name="description"]');
+      if (!desc) {
+        desc = document.createElement("meta");
+        desc.setAttribute("name", "description");
+        document.head.appendChild(desc);
+      }
+      if (description) desc.setAttribute("content", description);
+    };
+
+    if (selectedId) {
+      const post = posts.find((p) => p.id === selectedId);
+      if (post) {
+        setMeta(
+          `${post.title} | StudentenAtHome`,
+          post.excerpt || post.content?.slice(0, 150)
+        );
+        return;
+      }
+    }
+
+    // default blog page meta
+    setMeta(
+      "Tech-Blog – StudentenAtHome",
+      "Aktuelle Artikel und Tipps zu Technik, Sicherheit und Netzwerken von StudentenAtHome."
+    );
+  }, [selectedId, posts]);
+
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash || "";
+      const match = hash.match(/#\/blog\/(.+)/);
+      if (match) setSelectedId(match[1]);
+      else setSelectedId(null);
+    };
+
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
+
+  useEffect(() => {
+    try {
+      const val = localStorage.getItem("userLoggedIn");
+      setIsLoggedIn(val === "true");
+    } catch (e) {
+      setIsLoggedIn(false);
+    }
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "userLoggedIn") setIsLoggedIn(e.newValue === "true");
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const addPost = async (post: BlogPost) => {
+    // Try server API first (requires auth token)
+    try {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        const res = await fetch("/api/posts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(post),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          console.error("API error", err);
+          // fallback to local update
+        } else {
+          const created = await res.json();
+          setPosts((p = []) => [...p, created]);
+          setShowForm(false);
+          window.location.hash = "#/blog";
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn("Posting to API failed, falling back to local", e);
+    }
+
+    // Fallback: local-only
+    setPosts((p = []) => [...p, post]);
+    setShowForm(false);
+    window.location.hash = "#/blog";
+  };
+
+  const renderPostList = () => (
+    <>
+      <div className="flex items-center justify-between mb-6">
+        <div>
           <h1 className="text-4xl font-bold mb-4 text-primary">Tech-Blog</h1>
           <p className="text-lg text-muted-foreground">
             Tipps, Tricks und aktuelle Themen rund um Technik und digitale
             Sicherheit.
           </p>
         </div>
-
-        <Separator className="mb-12" />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogPosts.map((post) => (
-            <Card
-              key={post.id}
-              className="bg-secondary/50 border-border hover:border-accent transition-colors hover:shadow-lg cursor-pointer group"
+        <div>
+          {isLoggedIn ? (
+            <button
+              onClick={() => setShowForm(true)}
+              className="px-4 py-2 bg-accent text-accent-foreground rounded-md font-semibold"
             >
-              <CardHeader>
-                <div className="flex items-start justify-between mb-2">
-                  <Badge
-                    variant="secondary"
-                    className="bg-accent/20 text-accent border-0"
-                  >
-                    {post.category}
-                  </Badge>
-                </div>
-                <CardTitle className="text-lg line-clamp-3 group-hover:text-accent transition-colors">
-                  {post.title}
-                </CardTitle>
-                <CardDescription className="line-clamp-2 mt-2">
-                  {post.excerpt}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <User className="h-4 w-4" />
-                      {post.author}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {post.readTime}
-                    </div>
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {post.date}
-                  </div>
-                  <a
-                    href={`#/blog/${post.id}`}
-                    className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-semibold transition-colors group/link"
-                  >
-                    Zum Artikel
-                    <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <Separator className="my-12" />
-
-        <div className="bg-accent/10 border border-accent/20 rounded-lg p-8 md:p-12">
-          <h2 className="text-2xl font-bold mb-4 text-primary">
-            Verpassen Sie keine Updates!
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            Abonnieren Sie unseren Newsletter und erhalten Sie monatlich neue
-            Tech-Tipps und exklusive Angebote.
-          </p>
-          <a
-            href="#/contact"
-            className="inline-flex items-center justify-center px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:bg-accent/90 transition-colors"
-          >
-            Newsletter abonnieren
-          </a>
+              Neuen Beitrag erstellen
+            </button>
+          ) : (
+            <button
+              onClick={() => onNavigate?.("login")}
+              className="px-4 py-2 border border-border rounded-md text-sm text-accent"
+            >
+              Login, um Beitrag zu erstellen
+            </button>
+          )}
         </div>
       </div>
+
+      <Separator className="mb-12" />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => (
+          <Card
+            key={post.id}
+            className="bg-secondary/50 border-border hover:border-accent transition-colors hover:shadow-lg cursor-pointer group"
+          >
+            <CardHeader>
+              <div className="flex items-start justify-between mb-2">
+                <Badge
+                  variant="secondary"
+                  className="bg-accent/20 text-accent border-0"
+                >
+                  {post.category}
+                </Badge>
+              </div>
+              <CardTitle className="text-lg line-clamp-3 group-hover:text-accent transition-colors">
+                {post.title}
+              </CardTitle>
+              <CardDescription className="line-clamp-2 mt-2">
+                {post.excerpt}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <User className="h-4 w-4" />
+                    {post.author}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    {post.readTime}
+                  </div>
+                </div>
+                <div className="text-xs text-muted-foreground">{post.date}</div>
+                <a
+                  href={`#/blog/${post.id}`}
+                  className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-semibold transition-colors group/link"
+                >
+                  Zum Artikel
+                  <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+                </a>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Separator className="my-12" />
+
+      <div className="bg-accent/10 border border-accent/20 rounded-lg p-8 md:p-12">
+        <h2 className="text-2xl font-bold mb-4 text-primary">
+          Verpassen Sie keine Updates!
+        </h2>
+        <p className="text-muted-foreground mb-6">
+          Abonnieren Sie unseren Newsletter und erhalten Sie monatlich neue
+          Tech-Tipps und exklusive Angebote.
+        </p>
+        <button
+          onClick={() => onNavigate?.("contact")}
+          className="inline-flex items-center justify-center px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:bg-accent/90 transition-colors"
+        >
+          Newsletter abonnieren
+        </button>
+      </div>
+
+      {showForm && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4">
+          <div className="bg-background rounded-lg p-6 w-full max-w-2xl">
+            <h3 className="text-xl font-bold mb-4">Neuen Beitrag erstellen</h3>
+            <BlogPostForm
+              onCancel={() => setShowForm(false)}
+              onSubmit={async (values) => {
+                const id = Date.now().toString();
+                await addPost({ ...values, id });
+              }}
+            />
+          </div>
+        </div>
+      )}
+    </>
+  );
+
+  const renderSinglePost = (post: BlogPost) => (
+    <div className="prose prose-invert max-w-none">
+      <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+      <div className="text-sm text-muted-foreground mb-4">
+        {post.author} • {post.date} • {post.readTime}
+      </div>
+      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      <div className="mt-8">
+        <a href="#/blog" className="text-accent font-semibold">
+          Zurück zur Übersicht
+        </a>
+      </div>
     </div>
+  );
+
+  if (selectedId) {
+    const found = posts.find((p) => p.id === selectedId);
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
+        <div className="container mx-auto max-w-4xl px-6 py-20">
+          {found ? renderSinglePost(found) : <div>Artikel nicht gefunden.</div>}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
+      <div className="container mx-auto max-w-6xl px-6 py-20">
+        {renderPostList()}
+      </div>
+    </div>
+  );
+}
+
+function BlogPostForm({
+  onCancel,
+  onSubmit,
+}: {
+  onCancel: () => void;
+  onSubmit: (post: Omit<BlogPost, "id">) => void;
+}) {
+  const [title, setTitle] = useState("");
+  const [excerpt, setExcerpt] = useState("");
+  const [category, setCategory] = useState("");
+  const [author, setAuthor] = useState("");
+  const [date, setDate] = useState(new Date().toLocaleDateString("de-DE"));
+  const [readTime, setReadTime] = useState("5 Min");
+  const [content, setContent] = useState("<p></p>");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({ title, excerpt, category, author, date, readTime, content });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium">Titel</label>
+        <input
+          className="w-full mt-1 p-2 rounded-md bg-muted/10"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Kurzbeschreibung</label>
+        <input
+          className="w-full mt-1 p-2 rounded-md bg-muted/10"
+          value={excerpt}
+          onChange={(e) => setExcerpt(e.target.value)}
+          required
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium">Kategorie</label>
+          <input
+            className="w-full mt-1 p-2 rounded-md bg-muted/10"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium">Autor</label>
+          <input
+            className="w-full mt-1 p-2 rounded-md bg-muted/10"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+          />
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Inhalt (HTML)</label>
+        <textarea
+          rows={8}
+          className="w-full mt-1 p-2 rounded-md bg-muted/10"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </div>
+      <div className="flex gap-2 justify-end">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-4 py-2 rounded-md border"
+        >
+          Abbrechen
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-accent text-accent-foreground rounded-md"
+        >
+          Speichern
+        </button>
+      </div>
+    </form>
   );
 }
