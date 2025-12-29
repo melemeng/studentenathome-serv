@@ -1,39 +1,39 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { List, X } from '@phosphor-icons/react'
-import { siteData } from '@/lib/data'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { List, X } from "@phosphor-icons/react";
+import { siteData } from "@/lib/data";
 
 interface HeaderProps {
-  currentPage: string
-  onNavigate: (page: string) => void
+  currentPage: string;
+  onNavigate: (page: string) => void;
 }
 
 export function Header({ currentPage, onNavigate }: HeaderProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const mainNav = siteData.site.navigation.slice(0, 4)
+  const mainNav = siteData.site.navigation.slice(0, 4);
 
   const handleNavClick = (link: string, title: string) => {
     const pageMap: Record<string, string> = {
-      'Home': 'home',
-      'Lösungen': 'solutions',
-      'Über uns': 'about',
-      'Kontakt': 'contact'
-    }
-    
+      Home: "home",
+      Lösungen: "solutions",
+      "Über uns": "about",
+      Kontakt: "contact",
+    };
+
     if (pageMap[title]) {
-      onNavigate(pageMap[title])
-      setMobileMenuOpen(false)
+      onNavigate(pageMap[title]);
+      setMobileMenuOpen(false);
     }
-  }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto max-w-7xl px-6">
         <div className="flex h-16 items-center justify-between">
-          <button 
-            onClick={() => onNavigate('home')}
+          <button
+            onClick={() => onNavigate("home")}
             className="flex items-center space-x-2 transition-opacity hover:opacity-80"
           >
             <span className="text-xl font-bold tracking-tight text-primary">
@@ -48,11 +48,11 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
                 variant="ghost"
                 onClick={() => handleNavClick(item.link, item.title)}
                 className={`text-base transition-colors ${
-                  currentPage === item.title.toLowerCase() || 
-                  (currentPage === 'solutions' && item.title === 'Lösungen') ||
-                  (currentPage === 'about' && item.title === 'Über uns')
-                    ? 'text-accent font-medium'
-                    : 'text-foreground/80 hover:text-foreground'
+                  currentPage === item.title.toLowerCase() ||
+                  (currentPage === "solutions" && item.title === "Lösungen") ||
+                  (currentPage === "about" && item.title === "Über uns")
+                    ? "text-accent font-medium"
+                    : "text-foreground/80 hover:text-foreground"
                 }`}
               >
                 {item.title}
@@ -64,12 +64,12 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
             <Button
               variant="ghost"
               className="text-base"
-              onClick={() => window.location.href = siteData.site.auth[0].link}
+              onClick={() => onNavigate("login")}
             >
               Log in →
             </Button>
             <Button
-              onClick={() => onNavigate('contact')}
+              onClick={() => onNavigate("contact")}
               className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all hover:scale-105"
             >
               Jetzt buchen
@@ -89,11 +89,12 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
                     key={item.title}
                     onClick={() => handleNavClick(item.link, item.title)}
                     className={`text-left text-lg py-2 px-4 rounded-md transition-colors ${
-                      currentPage === item.title.toLowerCase() || 
-                      (currentPage === 'solutions' && item.title === 'Lösungen') ||
-                      (currentPage === 'about' && item.title === 'Über uns')
-                        ? 'bg-accent/10 text-accent font-medium'
-                        : 'hover:bg-secondary'
+                      currentPage === item.title.toLowerCase() ||
+                      (currentPage === "solutions" &&
+                        item.title === "Lösungen") ||
+                      (currentPage === "about" && item.title === "Über uns")
+                        ? "bg-accent/10 text-accent font-medium"
+                        : "hover:bg-secondary"
                     }`}
                   >
                     {item.title}
@@ -103,14 +104,17 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
                   <Button
                     variant="ghost"
                     className="w-full justify-start text-base"
-                    onClick={() => window.location.href = siteData.site.auth[0].link}
+                    onClick={() => {
+                      onNavigate("login");
+                      setMobileMenuOpen(false);
+                    }}
                   >
                     Log in →
                   </Button>
                   <Button
                     onClick={() => {
-                      onNavigate('contact')
-                      setMobileMenuOpen(false)
+                      onNavigate("contact");
+                      setMobileMenuOpen(false);
                     }}
                     className="w-full mt-2 bg-accent hover:bg-accent/90 text-accent-foreground"
                   >
@@ -123,5 +127,5 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
         </div>
       </div>
     </header>
-  )
+  );
 }
