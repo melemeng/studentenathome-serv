@@ -12,6 +12,27 @@ This template is your blank canvas. It comes with a minimal setup to help you ge
 
 Right now, this is just a starting point — the perfect place to begin building and testing your Spark applications.
 
+## 🚀 Deployment
+
+This project is configured to automatically deploy to GitHub Pages when changes are pushed to the `main` branch.
+
+### Setting up GitHub Pages
+
+1. Go to your repository settings on GitHub
+2. Navigate to **Pages** in the sidebar
+3. Under **Build and deployment**, select:
+   - **Source**: GitHub Actions
+4. The workflow will automatically deploy your site when you push to the `main` branch
+
+Your site will be available at: `https://melemeng.github.io/studentenathome-serv/`
+
+### Manual Deployment
+
+You can also trigger a deployment manually:
+1. Go to the **Actions** tab in your repository
+2. Select the "Deploy to GitHub Pages" workflow
+3. Click "Run workflow"
+
 🧹 Just Exploring?
 No problem! If you were just checking things out and don’t need to keep this code:
 
