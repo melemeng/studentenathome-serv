@@ -1,6 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig, PluginOption } from "vite";
+import { copyFileSync } from 'fs';
 
 import sparkPlugin from "@github/spark/spark-vite-plugin";
 import createIconImportProxy from "@github/spark/vitePhosphorIconProxyPlugin";
@@ -17,6 +18,13 @@ export default defineConfig({
     // DO NOT REMOVE
     createIconImportProxy() as PluginOption,
     sparkPlugin() as PluginOption,
+    // Copy .nojekyll file for GitHub Pages
+    {
+      name: 'copy-nojekyll',
+      closeBundle() {
+        copyFileSync('.nojekyll', 'dist/.nojekyll');
+      }
+    } as PluginOption,
   ],
   resolve: {
     alias: {
