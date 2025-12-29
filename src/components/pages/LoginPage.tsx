@@ -76,8 +76,8 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Verwalten Sie Ihre aktuellen und zukünftigen Technik-Support
-                  Termine
+                  Verwalten Sie Ihre aktuellen und zukünftigen
+                  Tech-Support-Termine
                 </p>
                 <Button className="mt-4 w-full bg-accent hover:bg-accent/90">
                   Zur Übersicht

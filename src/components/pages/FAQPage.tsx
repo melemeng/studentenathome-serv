@@ -55,7 +55,7 @@ export function FAQPage() {
       id: "faq-8",
       question: "Seid ihr auch am Wochenende erreichbar?",
       answer:
-        "Unsere Standard-Öffnungszeiten sind Mo-Fr 10:00-18:00 Uhr. Für dringende Fälle am Wochenende können Sie uns anrufen und nachfragen, ob eine schnelle Lösung möglich ist.",
+        "Unsere Standard-Öffnungszeiten sind Mo.–Fr. 10:00–18:00 Uhr. Für dringende Fälle am Wochenende können Sie uns anrufen und nachfragen, ob eine schnelle Lösung möglich ist.",
     },
     {
       id: "faq-9",
@@ -93,7 +93,7 @@ export function FAQPage() {
           </h1>
           <p className="text-lg text-muted-foreground">
             Hier finden Sie Antworten auf die häufigsten Fragen zu unseren
-            Dienstleistungen
+            Dienstleistungen.
           </p>
         </div>
 
@@ -130,7 +130,7 @@ export function FAQPage() {
           </h2>
           <p className="text-muted-foreground mb-6">
             Kontaktieren Sie uns gerne direkt. Unser Team beantwortet Ihre
-            Fragen sehr gerne.
+            Fragen gern.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <a

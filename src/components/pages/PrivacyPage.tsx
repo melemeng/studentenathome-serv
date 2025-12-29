@@ -32,13 +32,13 @@ export function PrivacyPage() {
                 Bundesdatenschutzgesetz (BDSG).
               </p>
               <p>
-                Die Betreiber dieser Website und ihrer Seiten (im folgenden
+                Die Betreiber dieser Website und ihrer Seiten (im Folgenden
                 "wir", "uns", "unser") sind:
               </p>
               <p className="ml-4">
                 Studenten Helfen UG
                 <br />
-                Klingestrasse 13C
+                Klingestraße 13C
                 <br />
                 01159 Dresden
                 <br />
@@ -52,15 +52,14 @@ export function PrivacyPage() {
           {/* Betroffene Personen */}
           <section>
             <h2 className="text-2xl font-bold mb-4 text-primary">
-              Wessen Daten wir sammeln
+              Welche Daten wir erfassen
             </h2>
             <div className="space-y-3 text-sm leading-relaxed">
               <p>
-                Besucher dieser Website, Nutzer von unseren Diensten und
-                Interessenten an unseren Angeboten sind zur Zeit die Betroffenen
-                dieser Datenschutzerklärung. Im rechtlichen Sinne sind
-                Betroffene alle Personen, über die wir personenbezogene Daten
-                sammeln.
+                Besucher dieser Website, Nutzer unserer Dienste und
+                Interessenten an unseren Angeboten sind die Betroffenen dieser
+                Datenschutzerklärung. Im rechtlichen Sinne sind Betroffene alle
+                Personen, deren personenbezogene Daten wir erfassen.
               </p>
             </div>
           </section>
@@ -96,9 +95,9 @@ export function PrivacyPage() {
                   Kontaktformular
                 </h3>
                 <p>
-                  Wenn Sie uns über das Kontaktformular oder per E-Mail
+                  Wenn Sie uns über das Kontaktformular oder per E‑Mail
                   kontaktieren, speichern wir die von Ihnen übermittelten Daten
-                  (Name, E-Mail-Adresse, Telefonnummer, Nachrichtentext) auf
+                  (Name, E‑Mail‑Adresse, Telefonnummer, Nachrichtentext) auf
                   unseren Servern. Diese Daten werden ausschließlich zur
                   Bearbeitung Ihrer Anfrage und zur Kontaktaufnahme verwendet.
                   Eine Weitergabe an Dritte findet nicht statt.
@@ -183,7 +182,7 @@ export function PrivacyPage() {
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>
-                  Kontaktdaten: Bis zur Beendigung der Anfragbearbeitung,
+                  Kontaktdaten: Bis zur Beendigung der Anfragebearbeitung,
                   maximal 12 Monate
                 </li>
                 <li>
@@ -271,9 +270,9 @@ export function PrivacyPage() {
             </h2>
             <div className="space-y-3 text-sm leading-relaxed">
               <p>
-                Wir setzen technische und organisatorische Maßnahmen um, um Ihre
-                Daten vor Verlust, Missbrauch und unbefugtem Zugriff zu
-                schützen. Unsere Website verwendet SSL/TLS-Verschlüsselung
+                Wir setzen technische und organisatorische Maßnahmen ein, um
+                Ihre Daten vor Verlust, Missbrauch und unbefugtem Zugriff zu
+                schützen. Unsere Website verwendet SSL/TLS‑Verschlüsselung
                 (HTTPS) für sichere Datenübertragung.
               </p>
               <p>

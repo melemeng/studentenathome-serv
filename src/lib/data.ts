@@ -65,10 +65,10 @@ export const siteData = {
         },
       ],
       highlight: {
-        title: "besonders wichtig",
-        subtitle: "Weniger kopfschmerzen mehr Zeit",
+        title: "Besonders wichtig",
+        subtitle: "Weniger Kopfschmerzen, mehr Zeit",
         description:
-          "Unser Service entlastet Sie von technischen Sorgen. Genießen Sie mehr Freizeit und Produktivität ohne Technikfrustration.",
+          "Unser Service entlastet Sie von technischen Sorgen. Genießen Sie mehr Freizeit und höhere Produktivität ohne Technikfrustration.",
         cta: "https://studentenathome.de/contact",
       },
       testimonial: {
@@ -77,11 +77,11 @@ export const siteData = {
         author: "Klaus Piepereit Senior",
       },
       newsletter: {
-        title: "5 Gratis technik-tips jetzt Newsletter abonnieren",
+        title: "5 Gratis-Technik-Tipps — Jetzt Newsletter abonnieren",
         description:
-          "In unserem Newsletter finden Sie monatlich tips und tricks rund um technik und erhalten exclusive angebote.",
-        emailFieldPlaceholder: "E-mail",
-        cta: "abonnieren",
+          "In unserem Newsletter finden Sie monatlich Tipps und Tricks rund um Technik und erhalten exklusive Angebote.",
+        emailFieldPlaceholder: "E-Mail",
+        cta: "Abonnieren",
       },
     },
     solutions: {
@@ -202,26 +202,26 @@ export const siteData = {
             "Suche nach motivierten Studenten mit Freude am Umgang mit Menschen und tiefem Fachwissen.",
           ],
           benefits: [
-            "Flexible hours",
-            "Remote work options",
-            "Health and wellness programs",
-            "Competitive salary",
+            "Flexible Arbeitszeiten",
+            "Remote-Arbeit möglich",
+            "Programme zur Gesundheitsförderung",
+            "Attraktive Vergütung",
           ],
           cta: "https://studentenathome.de/job",
         },
       ],
     },
     contact: {
-      title: "Support mit dem Sie gewinnen",
+      title: "Support, mit dem Sie gewinnen",
       howItWorks: [
-        "Telefonisch, per Mail oder online Formular schildern Sie uns Ihr Problem.",
-        "Erhalten Sie eine Einschätzung des Leistungsumfangs und einen Terminvorschlag.",
+        "Telefonisch, per E‑Mail oder über das Online‑Formular schildern Sie uns Ihr Problem.",
+        "Sie erhalten eine Einschätzung des Leistungsumfangs und einen Terminvorschlag.",
         "Lehnen Sie sich zurück, während wir Ihr Problem beheben.",
       ],
       ctaIntro:
-        "Kontaktieren Sie uns – kurz Ihr Problem schildern, wir melden uns mit Lösungsvorschlag.",
+        "Kontaktieren Sie uns – schildern Sie kurz Ihr Problem, wir melden uns mit einem Lösungsvorschlag.",
       details: {
-        address: "Klingestrasse 13C, 01159 Dresden",
+        address: "Klingestraße 13C, 01159 Dresden",
         telephone: "+49 176 75444136",
         telephoneLink: "tel:+49 176 75444136",
         email: "support@studentenathome.de",
@@ -229,9 +229,9 @@ export const siteData = {
       },
       form: {
         fields: [
-          { name: "Vornname", type: "text", id: "firstName" },
-          { name: "Familienname", type: "text", id: "lastName" },
-          { name: "E-mail", type: "email", id: "email" },
+          { name: "Vorname", type: "text", id: "firstName" },
+          { name: "Nachname", type: "text", id: "lastName" },
+          { name: "E‑Mail", type: "email", id: "email" },
           { name: "Telefonnummer", type: "tel", id: "phoneNumber" },
           { name: "Nachricht", type: "textarea", id: "message" },
         ],
@@ -240,6 +240,6 @@ export const siteData = {
     },
   },
   search: {
-    placeholders: [{ inputId: "search", placeholder: "Search" }],
+    placeholders: [{ inputId: "search", placeholder: "Suche" }],
   },
 };

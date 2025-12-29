@@ -32,7 +32,7 @@ const blogPosts: BlogPost[] = [
     date: "15. Dezember 2024",
     readTime: "8 Min",
     content: `
-      <h3 class="text-xl font-bold mb-4">Cybersecurity für Privatpersonen</h3>
+      <h3 class="text-xl font-bold mb-4">Cybersicherheit für Privatpersonen</h3>
       <p class="mb-4">Die digitale Sicherheit ist heute wichtiger denn je. Immer mehr Menschen arbeiten von zu Hause aus, nutzen Online-Banking und speichern vertrauliche Daten auf ihren Computern. Doch viele sind sich der Risiken nicht bewusst. Hier sind die 5 wichtigsten Tipps zum Schutz Ihrer Daten:</p>
       
       <h4 class="font-bold mt-6 mb-2">1. Starke Passwörter verwenden</h4>
@@ -63,7 +63,7 @@ const blogPosts: BlogPost[] = [
     date: "10. Dezember 2024",
     readTime: "10 Min",
     content: `
-      <h3 class="text-xl font-bold mb-4">Windows oder macOS: Der große Vergleich</h3>
+      <h3 class="text-xl font-bold mb-4">Windows oder macOS – Der große Vergleich</h3>
       <p class="mb-4">Die Wahl des richtigen Betriebssystems ist eine wichtige Entscheidung. Hier sind die Unterschiede zwischen Windows und macOS:</p>
       
       <h4 class="font-bold mt-6 mb-2">Windows 11</h4>
@@ -109,7 +109,7 @@ const blogPosts: BlogPost[] = [
     date: "5. Dezember 2024",
     readTime: "7 Min",
     content: `
-      <h3 class="text-xl font-bold mb-4">WLAN optimieren: Der praktische Ratgeber</h3>
+      <h3 class="text-xl font-bold mb-4">WLAN optimieren – Der praktische Ratgeber</h3>
       <p class="mb-4">Langsames WLAN ist frustrierend. Hier sind praktische Tipps zur Optimierung Ihrer Netzwerkgeschwindigkeit:</p>
       
       <h4 class="font-bold mt-6 mb-2">1. Router-Platzierung optimieren</h4>
@@ -154,7 +154,7 @@ const blogPosts: BlogPost[] = [
       <p class="mb-4">Viele Bilder und Dateien sind Duplikate. DupeGuru hilft, diese zu finden und zu löschen.</p>
       
       <h4 class="font-bold mt-6 mb-2">5. Cloud-Speicher nutzen</h4>
-      <p class="mb-4">Lagern Sie große Dateien, die Sie nicht täglich brauchen, in die Cloud aus. So sparen Sie lokalen Speicherplatz.</p>
+      <p class="mb-4">Lagern Sie große Dateien, die Sie nicht täglich benötigen, in die Cloud aus. So sparen Sie lokalen Speicherplatz.</p>
     `,
   },
   {
@@ -196,7 +196,7 @@ export function BlogPage() {
           <h1 className="text-4xl font-bold mb-4 text-primary">Tech-Blog</h1>
           <p className="text-lg text-muted-foreground">
             Tipps, Tricks und aktuelle Themen rund um Technik und digitale
-            Sicherheit
+            Sicherheit.
           </p>
         </div>
 

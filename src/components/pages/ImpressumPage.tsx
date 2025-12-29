@@ -23,7 +23,7 @@ export function ImpressumPage() {
               </p>
               <p>Studenten Helfen UG</p>
               <p>
-                Klingestrasse 13C
+                Klingestraße 13C
                 <br />
                 01159 Dresden
               </p>

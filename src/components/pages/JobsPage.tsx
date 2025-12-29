@@ -26,7 +26,7 @@ const jobListings: JobListing[] = [
     type: "Vollzeit / Teilzeit",
     location: "Dresden, Deutschland",
     description:
-      "Wir suchen engagierte Informatikstudenten und Absolventen, die unseren Kunden helfen möchten. Geben Sie technische Unterstützung vor Ort und remote, lösen Sie Probleme und helfen Sie privaten und geschäftlichen Kunden.",
+      "Wir suchen engagierte Informatikstudenten und Absolventen, die unseren Kunden helfen möchten. Bieten Sie technische Unterstützung vor Ort und remote an, lösen Sie Probleme und unterstützen Sie private und geschäftliche Kunden.",
     requirements: [
       "Laufendes Informatik-Studium oder abgeschlossenes Studium",
       "Grundkenntnisse in Windows, macOS oder Linux",
@@ -48,7 +48,7 @@ const jobListings: JobListing[] = [
     type: "Vollzeit / Teilzeit",
     location: "Dresden, Deutschland",
     description:
-      "Gesucht: Studenten mit Fachwissen in Netzwerktechnik und Systemkonfiguration. Sie werden Netzwerke aufbauen, konfigurieren und sicherstellen, dass unsere Kunden optimal vernetzt sind.",
+      "Gesucht: Studenten mit Fachwissen in Netzwerktechnik und Systemkonfiguration. Sie bauen Netzwerke auf, konfigurieren diese und stellen sicher, dass unsere Kunden optimal vernetzt sind.",
     requirements: [
       "Fortgeschrittene Kenntnisse in Netzwerktechnik (TCP/IP, DHCP, DNS)",
       "Erfahrung mit Routern, Switches und Firewalls",
@@ -158,7 +158,7 @@ export function JobsPage() {
               <GraduationCap className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
               <div>
                 <h3 className="font-semibold text-foreground mb-1">
-                  Lerne praktisch
+                  Praxisnah lernen
                 </h3>
                 <p className="text-sm text-muted-foreground">
                   Sammle echte Erfahrung mit echten Kunden und echten Problemen
