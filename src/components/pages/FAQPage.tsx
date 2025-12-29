@@ -9,6 +9,15 @@ import {
 } from "@/components/ui/accordion";
 
 export function FAQPage() {
+  useEffect(() => {
+    setMeta({
+      title: `FAQ | StudentenAtHome`,
+      description:
+        "Häufig gestellte Fragen zu unseren Services, Preisen und Support-Abläufen bei StudentenAtHome.",
+      canonical: "https://www.studentenathome.de/faq",
+    });
+  }, []);
+
   const faqs = [
     {
       id: "faq-1",
@@ -162,13 +171,3 @@ export function FAQPage() {
     </div>
   );
 }
-
-// set meta
-useEffect(() => {
-  setMeta({
-    title: `FAQ | StudentenAtHome`,
-    description:
-      "Häufig gestellte Fragen zu unseren Services, Preisen und Support-Abläufen bei StudentenAtHome.",
-    canonical: "https://www.studentenathome.de/faq",
-  });
-}, []);
