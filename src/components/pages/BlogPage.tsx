@@ -199,6 +199,7 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
   const [showForm, setShowForm] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const currentPosts = posts ?? defaultBlogPosts;
 
   // SEO: update title and meta description per view
   useEffect(() => {
@@ -214,7 +215,7 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
     };
 
     if (selectedId) {
-      const post = posts.find((p) => p.id === selectedId);
+      const post = currentPosts.find((p) => p.id === selectedId);
       if (post) {
         setMeta(
           `${post.title} | StudentenAtHome`,
@@ -229,7 +230,7 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
       "Tech-Blog – StudentenAtHome",
       "Aktuelle Artikel und Tipps zu Technik, Sicherheit und Netzwerken von StudentenAtHome."
     );
-  }, [selectedId, posts]);
+  }, [selectedId, currentPosts]);
 
   useEffect(() => {
     const handleHash = () => {
@@ -325,7 +326,7 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
       <Separator className="mb-12" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.map((post) => (
+        {currentPosts.map((post) => (
           <Card
             key={post.id}
             className="bg-secondary/50 border-border hover:border-accent transition-colors hover:shadow-lg cursor-pointer group"
@@ -423,7 +424,7 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
   );
 
   if (selectedId) {
-    const found = posts.find((p) => p.id === selectedId);
+    const found = currentPosts.find((p) => p.id === selectedId);
     return (
       <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
         <div className="container mx-auto max-w-4xl px-6 py-20">
