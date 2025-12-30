@@ -13,3 +13,10 @@ cmds = [
 
 [start]
 cmd = "cd server && node index.js"
+
+[variables]
+NIXPACKS_NO_MUSL = "1"
+
+# Disable static file serving (Caddy)
+[staticAssets]
+enable = false
