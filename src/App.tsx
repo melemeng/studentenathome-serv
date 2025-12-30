@@ -14,6 +14,17 @@ const PrivacyPage = lazy(() => import("@/components/pages/PrivacyPage"));
 const BlogPage = lazy(() => import("@/components/pages/BlogPage"));
 const JobsPage = lazy(() => import("@/components/pages/JobsPage"));
 const LoginPage = lazy(() => import("@/components/pages/LoginPage"));
+const RegisterPage = lazy(() => import("@/components/pages/RegisterPage"));
+const AdminPage = lazy(() => import("@/components/pages/AdminPage"));
+const VerifyEmailPage = lazy(
+  () => import("@/components/pages/VerifyEmailPage")
+);
+const RequestPasswordResetPage = lazy(
+  () => import("@/components/pages/RequestPasswordResetPage")
+);
+const ResetPasswordPage = lazy(
+  () => import("@/components/pages/ResetPasswordPage")
+);
 
 // Loading component
 function PageLoader() {
@@ -42,6 +53,11 @@ function pathToPage(path: string): string {
     return "datenschutz";
   if (cleanPath === "/jobs") return "jobs";
   if (cleanPath === "/login") return "login";
+  if (cleanPath === "/register") return "register";
+  if (cleanPath === "/admin") return "admin";
+  if (cleanPath === "/verify-email") return "verify-email";
+  if (cleanPath === "/request-password-reset") return "request-password-reset";
+  if (cleanPath === "/reset-password") return "reset-password";
   return "home";
 }
 
@@ -99,6 +115,16 @@ function App() {
         return <JobsPage />;
       case "login":
         return <LoginPage onNavigate={handleNavigate} />;
+      case "register":
+        return <RegisterPage onNavigate={handleNavigate} />;
+      case "admin":
+        return <AdminPage />;
+      case "verify-email":
+        return <VerifyEmailPage onNavigate={handleNavigate} />;
+      case "request-password-reset":
+        return <RequestPasswordResetPage onNavigate={handleNavigate} />;
+      case "reset-password":
+        return <ResetPasswordPage onNavigate={handleNavigate} />;
       default:
         return <HomePage onNavigate={handleNavigate} />;
     }

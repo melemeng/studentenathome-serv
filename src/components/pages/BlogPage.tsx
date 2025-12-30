@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Clock, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useKV } from "@github/spark/hooks";
+import { toast } from "sonner";
+import DOMPurify from "dompurify";
 
 interface BlogPost {
   id: string;
@@ -20,6 +22,7 @@ interface BlogPost {
   date: string;
   readTime: string;
   content: string;
+  status?: "pending" | "approved" | "rejected";
 }
 
 const defaultBlogPosts: BlogPost[] = [
@@ -194,11 +197,12 @@ interface BlogPageProps {
   onNavigate?: (page: string) => void;
 }
 
-export function BlogPage({ onNavigate }: BlogPageProps) {
+export default function BlogPage({ onNavigate }: BlogPageProps) {
   const [posts, setPosts] = useKV<BlogPost[]>("blog-posts", defaultBlogPosts);
   const [showForm, setShowForm] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const currentPosts = posts ?? defaultBlogPosts;
 
   // SEO: update title and meta description per view
@@ -265,13 +269,54 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
 
   useEffect(() => {
     try {
-      const val = localStorage.getItem("userLoggedIn");
-      setIsLoggedIn(val === "true");
+      // Check if user is logged in and session is valid
+      const sessionStr = localStorage.getItem("authSession");
+      if (sessionStr) {
+        const session = JSON.parse(sessionStr);
+        const now = Date.now();
+
+        // Check if session is still valid
+        if (now < session.expiresAt) {
+          setIsLoggedIn(true);
+          setIsAdmin(session.isAdmin || false);
+        } else {
+          // Session expired - clear it
+          localStorage.removeItem("authSession");
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("userLoggedIn");
+          localStorage.removeItem("authToken");
+          setIsLoggedIn(false);
+          setIsAdmin(false);
+          toast.warning(
+            "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
+          );
+        }
+      } else {
+        // Fallback to old method for backward compatibility
+        const val = localStorage.getItem("userLoggedIn");
+        setIsLoggedIn(val === "true");
+        setIsAdmin(false);
+      }
     } catch (e) {
+      console.error("Error checking session", e);
       setIsLoggedIn(false);
+      setIsAdmin(false);
     }
+
     const onStorage = (e: StorageEvent) => {
-      if (e.key === "userLoggedIn") setIsLoggedIn(e.newValue === "true");
+      if (e.key === "userLoggedIn" || e.key === "authSession") {
+        try {
+          const sessionStr = localStorage.getItem("authSession");
+          if (sessionStr) {
+            const session = JSON.parse(sessionStr);
+            setIsLoggedIn(Date.now() < session.expiresAt);
+          } else {
+            setIsLoggedIn(e.newValue === "true");
+          }
+        } catch {
+          setIsLoggedIn(false);
+        }
+      }
     };
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
@@ -293,6 +338,9 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
           console.error("API error", err);
+          toast.error(
+            "Fehler beim Speichern auf dem Server. Wird lokal gespeichert."
+          );
           // fallback to local update
         } else {
           const created = await res.json();
@@ -300,11 +348,15 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
           setShowForm(false);
           window.history.pushState({}, "", "/blog");
           setSelectedId(null);
+          toast.success(
+            "Blog-Beitrag erfolgreich eingereicht! Er wird nach Admin-Prüfung veröffentlicht."
+          );
           return;
         }
       }
     } catch (e) {
       console.warn("Posting to API failed, falling back to local", e);
+      toast.warning("Verbindung fehlgeschlagen. Wird lokal gespeichert.");
     }
 
     // Fallback: local-only
@@ -312,6 +364,7 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
     setShowForm(false);
     window.history.pushState({}, "", "/blog");
     setSelectedId(null);
+    toast.success("Blog-Beitrag lokal gespeichert!");
   };
 
   const renderPostList = () => (
@@ -324,14 +377,24 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
             Sicherheit.
           </p>
         </div>
-        <div>
+        <div className="flex flex-col gap-2">
           {isLoggedIn ? (
-            <button
-              onClick={() => setShowForm(true)}
-              className="px-4 py-2 bg-accent text-accent-foreground rounded-md font-semibold"
-            >
-              Neuen Beitrag erstellen
-            </button>
+            <>
+              <button
+                onClick={() => setShowForm(true)}
+                className="px-4 py-2 bg-accent text-accent-foreground rounded-md font-semibold"
+              >
+                Neuen Beitrag erstellen
+              </button>
+              {isAdmin && (
+                <button
+                  onClick={() => onNavigate?.("admin")}
+                  className="px-4 py-2 border border-accent text-accent rounded-md font-semibold hover:bg-accent/10"
+                >
+                  Admin-Panel
+                </button>
+              )}
+            </>
           ) : (
             <button
               onClick={() => onNavigate?.("login")}
@@ -417,14 +480,38 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4">
-          <div className="bg-background rounded-lg p-6 w-full max-w-2xl">
-            <h3 className="text-xl font-bold mb-4">Neuen Beitrag erstellen</h3>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div className="bg-background rounded-lg shadow-2xl border border-border p-8 w-full max-w-4xl my-8">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-primary">
+                Neuen Blog-Beitrag erstellen
+              </h3>
+              <button
+                onClick={() => setShowForm(false)}
+                className="text-muted-foreground hover:text-foreground transition-colors p-2"
+                aria-label="Schließen"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
             <BlogPostForm
               onCancel={() => setShowForm(false)}
               onSubmit={async (values) => {
                 const id = Date.now().toString();
-                await addPost({ ...values, id });
+                // Add status as 'pending' for admin approval
+                await addPost({ ...values, id, status: "pending" } as BlogPost);
               }}
             />
           </div>
@@ -439,7 +526,9 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
       <div className="text-sm text-muted-foreground mb-4">
         {post.author} • {post.date} • {post.readTime}
       </div>
-      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      <div
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
+      />
       <div className="mt-8">
         <a
           href="/blog"
@@ -485,77 +574,186 @@ function BlogPostForm({
 }) {
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
-  const [category, setCategory] = useState("");
-  const [author, setAuthor] = useState("");
+  const [category, setCategory] = useState("Technik");
+  const [author, setAuthor] = useState("StudentenAtHome Team");
   const [date, setDate] = useState(new Date().toLocaleDateString("de-DE"));
   const [readTime, setReadTime] = useState("5 Min");
-  const [content, setContent] = useState("<p></p>");
+  const [content, setContent] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!title.trim() || !excerpt.trim() || !content.trim()) {
+      toast.error("Bitte füllen Sie alle Pflichtfelder aus");
+      return;
+    }
+    if (title.length < 10) {
+      toast.error("Der Titel sollte mindestens 10 Zeichen lang sein");
+      return;
+    }
+    if (excerpt.length < 20) {
+      toast.error(
+        "Die Kurzbeschreibung sollte mindestens 20 Zeichen lang sein"
+      );
+      return;
+    }
     onSubmit({ title, excerpt, category, author, date, readTime, content });
   };
 
+  const categories = [
+    "Technik",
+    "Sicherheit",
+    "Betriebssysteme",
+    "Netzwerk",
+    "Wartung",
+    "Datenschutz",
+    "Software",
+    "Hardware",
+  ];
+
+  const estimateReadTime = (text: string) => {
+    const wordsPerMinute = 200;
+    const words = text.trim().split(/\s+/).length;
+    const minutes = Math.ceil(words / wordsPerMinute);
+    return `${minutes} Min`;
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium">Titel</label>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-2">
+        <label className="text-sm font-semibold text-foreground">
+          Titel <span className="text-destructive">*</span>
+        </label>
         <input
-          className="w-full mt-1 p-2 rounded-md bg-muted/10"
+          className="w-full p-3 rounded-md bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 transition-colors"
+          placeholder="z.B. Die 10 besten Tipps für sicheres Surfen"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium">Kurzbeschreibung</label>
+
+      <div className="space-y-2">
+        <label className="text-sm font-semibold text-foreground">
+          Kurzbeschreibung <span className="text-destructive">*</span>
+        </label>
         <input
-          className="w-full mt-1 p-2 rounded-md bg-muted/10"
+          className="w-full p-3 rounded-md bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 transition-colors"
+          placeholder="Eine kurze Zusammenfassung für die Übersicht"
           value={excerpt}
           onChange={(e) => setExcerpt(e.target.value)}
           required
+          maxLength={200}
         />
+        <p className="text-xs text-muted-foreground">
+          {excerpt.length}/200 Zeichen
+        </p>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium">Kategorie</label>
-          <input
-            className="w-full mt-1 p-2 rounded-md bg-muted/10"
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-foreground">
+            Kategorie
+          </label>
+          <select
+            className="w-full p-3 rounded-md bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 transition-colors"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-          />
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
         </div>
-        <div>
-          <label className="block text-sm font-medium">Autor</label>
+
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-foreground">Autor</label>
           <input
-            className="w-full mt-1 p-2 rounded-md bg-muted/10"
+            className="w-full p-3 rounded-md bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 transition-colors"
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
           />
         </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-foreground">
+            Lesezeit
+          </label>
+          <input
+            className="w-full p-3 rounded-md bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 transition-colors"
+            value={readTime}
+            onChange={(e) => setReadTime(e.target.value)}
+            placeholder="z.B. 5 Min"
+          />
+        </div>
       </div>
-      <div>
-        <label className="block text-sm font-medium">Inhalt (HTML)</label>
+
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-foreground">
+            Inhalt (HTML) <span className="text-destructive">*</span>
+          </label>
+          <button
+            type="button"
+            onClick={() => {
+              const estimated = estimateReadTime(
+                content.replace(/<[^>]+>/g, "")
+              );
+              setReadTime(estimated);
+            }}
+            className="text-xs text-accent hover:text-accent/80"
+          >
+            Lesezeit berechnen
+          </button>
+        </div>
         <textarea
-          rows={8}
-          className="w-full mt-1 p-2 rounded-md bg-muted/10"
+          rows={12}
+          className="w-full p-3 rounded-md bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 transition-colors font-mono text-sm"
+          placeholder={
+            '<h3 class="text-xl font-bold mb-4">Überschrift</h3>\n<p class="mb-4">Ihr Text hier...</p>'
+          }
           value={content}
           onChange={(e) => setContent(e.target.value)}
+          required
         />
+        <p className="text-xs text-muted-foreground">
+          Verwenden Sie HTML-Tags für Formatierung. Überschriften mit h3/h4,
+          Absätze mit p, Listen mit ul/li.
+        </p>
       </div>
-      <div className="flex gap-2 justify-end">
+
+      <div className="bg-accent/10 border border-accent/20 rounded-lg p-4">
+        <h4 className="font-semibold text-sm mb-2">Vorschau</h4>
+        <div className="space-y-1 text-sm">
+          <p>
+            <strong>Titel:</strong> {title || "(kein Titel)"}
+          </p>
+          <p>
+            <strong>Kategorie:</strong> {category}
+          </p>
+          <p>
+            <strong>Autor:</strong> {author}
+          </p>
+          <p>
+            <strong>Lesezeit:</strong> {readTime}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex gap-3 justify-end pt-4 border-t border-border">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 rounded-md border"
+          className="px-6 py-2.5 rounded-md border border-border hover:bg-secondary/50 transition-colors font-medium"
         >
           Abbrechen
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-accent text-accent-foreground rounded-md"
+          className="px-6 py-2.5 bg-accent text-accent-foreground rounded-md hover:bg-accent/90 transition-colors font-semibold"
         >
-          Speichern
+          Beitrag veröffentlichen
         </button>
       </div>
     </form>

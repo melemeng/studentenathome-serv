@@ -11,7 +11,7 @@ interface SolutionsPageProps {
   onNavigate: (page: string) => void;
 }
 
-export function SolutionsPage({ onNavigate }: SolutionsPageProps) {
+export default function SolutionsPage({ onNavigate }: SolutionsPageProps) {
   const { title, intro, services, pricing } = siteData.pages.solutions;
 
   const fadeInUp = {

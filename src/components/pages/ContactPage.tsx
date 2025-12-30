@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import setMeta from "@/lib/seo";
 import { toast } from "sonner";
 
-export function ContactPage() {
+export default function ContactPage() {
   const { title, howItWorks, ctaIntro, details, form } = siteData.pages.contact;
 
   const [formData, setFormData] = useState({
@@ -22,6 +22,7 @@ export function ContactPage() {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,20 +53,57 @@ export function ContactPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      toast.success("Vielen Dank! Ihre Nachricht wurde gesendet.");
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phoneNumber: "",
-        message: "",
+    if (!validateForm()) {
+      toast.error("Bitte füllen Sie alle erforderlichen Felder korrekt aus.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-    } else {
-      toast.error("Bitte füllen Sie alle erforderlichen Felder aus.");
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(
+          "Vielen Dank! Ihre Nachricht wurde erfolgreich gesendet. Wir melden uns bald bei Ihnen!",
+          {
+            duration: 5000,
+            icon: "✉️",
+          }
+        );
+
+        // Reset form
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phoneNumber: "",
+          message: "",
+        });
+      } else {
+        toast.error(
+          data.error ||
+            "Fehler beim Senden der Nachricht. Bitte versuchen Sie es erneut."
+        );
+      }
+    } catch (error) {
+      console.error("Contact form error:", error);
+      toast.error(
+        "Verbindungsfehler. Bitte kontaktieren Sie uns direkt per E-Mail: support@studentenathome.de"
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -275,9 +313,10 @@ export function ContactPage() {
                   <Button
                     type="submit"
                     size="lg"
-                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground transition-all hover:scale-105"
+                    disabled={isSubmitting}
+                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {form.submit}
+                    {isSubmitting ? "Wird gesendet..." : form.submit}
                   </Button>
                 </form>
               </Card>

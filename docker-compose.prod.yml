@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: studentenathome-db-prod
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-studentenathome}
+    ports:
+      - "127.0.0.1:5432:5432"  # Only accessible from localhost
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+      - ./server/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./backups:/backups
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - studentenathome_network
+
+  # Optional: Automated Backups
+  backup:
+    image: postgres:16-alpine
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-studentenathome}
+    volumes:
+      - ./backups:/backups
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      while true; do
+        sleep 86400;  # 24 hours
+        pg_dump -h postgres -U ${DB_USER:-postgres} ${DB_NAME:-studentenathome} > /backups/backup_$$(date +%Y%m%d_%H%M%S).sql
+        echo 'Backup completed: backup_'$$(date +%Y%m%d_%H%M%S)'.sql'
+        find /backups -name '*.sql' -mtime +7 -delete;  # Delete backups older than 7 days
+      done
+      "
+    networks:
+      - studentenathome_network
+
+volumes:
+  postgres_data_prod:
+    driver: local
+
+networks:
+  studentenathome_network:
+    driver: bridge

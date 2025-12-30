@@ -12,7 +12,7 @@ interface AboutPageProps {
   onNavigate: (page: string) => void;
 }
 
-export function AboutPage({ onNavigate }: AboutPageProps) {
+export default function AboutPage({ onNavigate }: AboutPageProps) {
   const { sections } = siteData.pages.about;
 
   const fadeInUp = {

@@ -1,0 +1,52 @@
+# API TEST COMMANDS
+# Execute these commands manually in your terminal
+
+# 1. Register Admin User
+curl -X POST http://localhost:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"support@studentenathome.de","password":"TestPassword123!","name":"Admin User"}'
+
+# 2. Get verification token from Supabase SQL Editor:
+# SELECT id, email, verification_token, is_verified, is_admin FROM users WHERE email = 'support@studentenathome.de';
+
+# 3. Verify email (replace YOUR_TOKEN with actual token from step 2)
+curl "http://localhost:5000/api/auth/verify-email?token=YOUR_TOKEN"
+
+# 4. Login with verified account
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"support@studentenathome.de","password":"TestPassword123!"}'
+
+# 5. Test wrong password (should increment failed_login_attempts)
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"support@studentenathome.de","password":"WrongPassword"}'
+
+# 6. Get all posts
+curl http://localhost:5000/api/posts
+
+# 7. Create blog post (with admin token)
+curl -X POST http://localhost:5000/api/posts \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer demo-token" \
+  -d '{"title":"Test Blog Post About Tech Support in Dresden","excerpt":"This is a comprehensive test excerpt for our blog post about tech support services","content":"This is the full content of the test blog post. It contains information about our tech support services in Dresden, Germany. We provide excellent support for students and businesses alike.","category":"Tech-Tipps","author":"Admin Team"}'
+
+# 8. Check sitemap
+curl http://localhost:5000/sitemap.xml
+
+# 9. Check robots.txt
+curl http://localhost:5000/robots.txt
+
+# Database queries to run in Supabase SQL Editor:
+
+# Check users table
+SELECT id, email, name, is_verified, is_admin, is_locked, failed_login_attempts, last_login, created_at FROM users;
+
+# Check audit log
+SELECT * FROM audit_log ORDER BY created_at DESC LIMIT 10;
+
+# Check failed login attempts
+SELECT * FROM failed_login_attempts ORDER BY attempted_at DESC LIMIT 10;
+
+# Check posts
+SELECT id, title, status, published_at, created_at FROM posts;

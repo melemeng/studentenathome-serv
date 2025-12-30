@@ -10,19 +10,187 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Eye, EyeOff, Mail, Lock, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, CheckCircle2, Shield } from "lucide-react";
+import { toast } from "sonner";
+import { authStore } from "@/lib/authStore";
+import apiConfig from "@/lib/apiConfig";
 
 interface LoginPageProps {
   onNavigate?: (page: string) => void;
+}
+
+interface AuthSession {
+  email: string;
+  token: string;
+  isAdmin: boolean;
+  expiresAt: number; // timestamp
+  createdAt: number;
+}
+
+// Security utilities
+const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+const WARNING_BEFORE_EXPIRY = 5 * 60 * 1000; // 5 minutes
+
+// Admin email whitelist - only these emails have admin access
+const ADMIN_EMAILS = [
+  "admin@studentenathome.de",
+  "georgi@studentenathome.de",
+];
+
+function generateSecureToken(email: string): string {
+  // In production, this would be a JWT from the backend
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substring(2, 15);
+  return btoa(`${email}:${timestamp}:${random}`);
+}
+
+function saveSession(email: string): AuthSession {
+  const now = Date.now();
+  const isAdmin = ADMIN_EMAILS.includes(email.toLowerCase());
+  const session: AuthSession = {
+    email,
+    token: generateSecureToken(email),
+    isAdmin,
+    expiresAt: now + SESSION_DURATION,
+    createdAt: now,
+  };
+
+  try {
+    localStorage.setItem("authSession", JSON.stringify(session));
+    // Keep legacy keys for backward compatibility
+    localStorage.setItem("userEmail", email);
+    localStorage.setItem("userLoggedIn", "true");
+    localStorage.setItem("authToken", session.token);
+  } catch (e) {
+    console.error("Failed to save session", e);
+  }
+
+  return session;
+}
+
+function getSession(): AuthSession | null {
+  try {
+    const sessionStr = localStorage.getItem("authSession");
+    if (!sessionStr) return null;
+
+    const session: AuthSession = JSON.parse(sessionStr);
+    const now = Date.now();
+
+    // Check if session expired
+    if (now > session.expiresAt) {
+      clearSession();
+      return null;
+    }
+
+    return session;
+  } catch (e) {
+    console.error("Failed to parse session", e);
+    return null;
+  }
+}
+
+function clearSession() {
+  try {
+    localStorage.removeItem("authSession");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userLoggedIn");
+    localStorage.removeItem("authToken");
+  } catch (e) {
+    console.error("Failed to clear session", e);
+  }
+}
+
+function getTimeUntilExpiry(session: AuthSession): number {
+  return session.expiresAt - Date.now();
+}
+
+function formatTimeRemaining(ms: number): string {
+  const hours = Math.floor(ms / (60 * 60 * 1000));
+  const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
+
+  if (hours > 0) {
+    return `${hours} Stunde${hours !== 1 ? "n" : ""} ${minutes} Minute${
+      minutes !== 1 ? "n" : ""
+    }`;
+  }
+  return `${minutes} Minute${minutes !== 1 ? "n" : ""}`;
 }
 
 export function LoginPage({ onNavigate }: LoginPageProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start with loading to check session
   const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentSession, setCurrentSession] = useState<AuthSession | null>(
+    null
+  );
+  const [showSessionWarning, setShowSessionWarning] = useState(false);
+
+  // Check for existing valid session on mount (auto-login)
+  useEffect(() => {
+    const session = getSession();
+
+    if (session) {
+      const timeRemaining = getTimeUntilExpiry(session);
+
+      if (timeRemaining > 0) {
+        // Valid session exists - auto login
+        setCurrentSession(session);
+        setIsLoggedIn(true);
+        setEmail(session.email);
+        toast.success(`Willkommen zurück, ${session.email}!`);
+
+        // Show warning if session expires soon
+        if (timeRemaining < WARNING_BEFORE_EXPIRY) {
+          setShowSessionWarning(true);
+          toast.warning(
+            `Ihre Sitzung läuft in ${formatTimeRemaining(
+              timeRemaining
+            )} ab. Bitte melden Sie sich erneut an.`,
+            { duration: 10000 }
+          );
+        }
+      } else {
+        // Session expired
+        clearSession();
+        toast.error(
+          "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
+        );
+      }
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  // Session expiry check interval
+  useEffect(() => {
+    if (!isLoggedIn || !currentSession) return;
+
+    const checkInterval = setInterval(() => {
+      const timeRemaining = getTimeUntilExpiry(currentSession);
+
+      if (timeRemaining <= 0) {
+        // Session expired
+        clearSession();
+        setIsLoggedIn(false);
+        setCurrentSession(null);
+        toast.error(
+          "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
+        );
+      } else if (timeRemaining < WARNING_BEFORE_EXPIRY && !showSessionWarning) {
+        // Show warning
+        setShowSessionWarning(true);
+        toast.warning(
+          `Ihre Sitzung läuft in ${formatTimeRemaining(timeRemaining)} ab.`,
+          { duration: 10000 }
+        );
+      }
+    }, 60000); // Check every minute
+
+    return () => clearInterval(checkInterval);
+  }, [isLoggedIn, currentSession, showSessionWarning]);
 
   useEffect(() => {
     // set meta for login page
@@ -41,36 +209,135 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
     setError("");
     setIsLoading(true);
 
-    setTimeout(() => {
-      if (!email || !password) {
-        setError("Bitte füllen Sie alle Felder aus");
+    if (!email || !password) {
+      setError("Bitte füllen Sie alle Felder aus");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!email.includes("@")) {
+      setError("Bitte geben Sie eine gültige E-Mail-Adresse ein");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (data.needsVerification) {
+          setError(
+            "E-Mail noch nicht verifiziert. Bitte überprüfen Sie Ihren Posteingang."
+          );
+          setIsLoading(false);
+          return;
+        }
+        setError(data.error || "Anmeldung fehlgeschlagen");
         setIsLoading(false);
         return;
       }
 
-      if (!email.includes("@")) {
-        setError("Bitte geben Sie eine gültige E-Mail-Adresse ein");
-        setIsLoading(false);
-        return;
-      }
-
-      if (password.length < 6) {
-        setError("Passwort muss mindestens 6 Zeichen lang sein");
-        setIsLoading(false);
-        return;
-      }
-
-      // Simulate successful login — store a demo auth token
-      localStorage.setItem("userEmail", email);
-      localStorage.setItem("userLoggedIn", "true");
-      localStorage.setItem("authToken", "demo-token");
+      // Store JWT token and user data
+      authStore.login(data.token, data.user);
+      setCurrentSession({
+        email: data.user.email,
+        token: data.token,
+        isAdmin: data.user.isAdmin,
+        expiresAt: Date.now() + SESSION_DURATION,
+        createdAt: Date.now(),
+      });
       setIsLoggedIn(true);
       setIsLoading(false);
+
+      const expiryTime = formatTimeRemaining(SESSION_DURATION);
+      toast.success(
+        session.isAdmin
+          ? `Admin-Anmeldung erfolgreich! Sitzung gültig für ${expiryTime}.`
+          : `Erfolgreich angemeldet! Sitzung gültig für ${expiryTime}.`
+      );
+
+      // Redirect based on role
+      setTimeout(() => {
+        if (onNavigate) {
+          onNavigate(session.isAdmin ? "admin" : "blog");
+        }
+      }, 1000);
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("Verbindungsfehler. Bitte versuchen Sie es später erneut.");
+      setIsLoading(false);
+    }
+  };
+      }, 1000);
     }, 1000);
   };
 
+  const handleLogout = async () => {
+    try {
+      const token = authStore.getToken();
+      
+      if (token) {
+        // Call backend logout endpoint to revoke token
+        await fetch(apiConfig.auth.logout, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Continue with local logout even if API call fails
+    } finally {
+      // Clear all auth data locally
+      authStore.logout();
+      clearSession();
+      setIsLoggedIn(false);
+      setCurrentSession(null);
+      setEmail("");
+      setPassword("");
+      setShowSessionWarning(false);
+      toast.info("Sie wurden erfolgreich abgemeldet.");
+    }
+  };
+
+  const handleExtendSession = () => {
+    if (currentSession) {
+      const newSession = saveSession(currentSession.email);
+      setCurrentSession(newSession);
+      setShowSessionWarning(false);
+      toast.success("Sitzung wurde verlängert.");
+    }
+  };
+
+  // Show loading state during session check
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 flex items-center justify-center">
+        <div className="text-center">
+          <Shield className="h-12 w-12 text-accent mx-auto mb-4 animate-pulse" />
+          <p className="text-lg text-muted-foreground">
+            Sitzung wird überprüft...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // Zeige Dashboard nach Login
-  if (isLoggedIn) {
+  if (isLoggedIn && currentSession) {
+    const timeRemaining = getTimeUntilExpiry(currentSession);
+    const sessionAge = Date.now() - currentSession.createdAt;
+
     return (
       <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
         <div className="container mx-auto max-w-6xl px-6 py-20">
@@ -82,7 +349,83 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
             <p className="text-lg text-muted-foreground">Willkommen, {email}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {/* Session Info Card */}
+          {showSessionWarning && (
+            <Card className="mb-6 border-yellow-500/50 bg-yellow-500/10">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Shield className="h-8 w-8 text-yellow-500" />
+                    <div>
+                      <p className="font-semibold text-foreground">
+                        Sitzung läuft bald ab
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Ihre Sitzung endet in{" "}
+                        {formatTimeRemaining(timeRemaining)}
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={handleExtendSession}
+                    className="bg-accent hover:bg-accent/90"
+                  >
+                    Sitzung verlängern
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          <Card className="mb-6 bg-secondary/30 border-border">
+            <CardContent className="pt-6">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-muted-foreground">
+                    E-Mail:
+                  </span>
+                  <span className="text-sm text-foreground">
+                    {currentSession.email}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Rolle:
+                  </span>
+                  <span
+                    className={`text-sm font-semibold ${
+                      currentSession.isAdmin
+                        ? "text-accent"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {currentSession.isAdmin ? "Administrator" : "Benutzer"}
+                  </span>
+                </div>
+                <Separator />
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">
+                    Angemeldet seit: {formatTimeRemaining(sessionAge)}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Gültig bis:{" "}
+                    {new Date(currentSession.expiresAt).toLocaleString("de-DE")}
+                  </p>
+                </div>
+                <Button
+                  onClick={handleExtendSession}
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-accent text-accent hover:bg-accent/10 mt-2"
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  Sitzung verlängern
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <Card className="bg-secondary/50 border-border">
               <CardHeader>
                 <CardTitle className="text-primary">Meine Buchungen</CardTitle>
@@ -113,16 +456,36 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
               </CardContent>
             </Card>
 
-            <Card className="bg-secondary/50 border-border">
+            <Card className="bg-gradient-to-br from-accent/20 to-accent/5 border-accent/30">
               <CardHeader>
-                <CardTitle className="text-primary">Rechnungen</CardTitle>
+                <CardTitle className="text-primary">Blog Posts</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Einsehen Sie alle bisherigen Rechnungen und Zahlungen
+                  Erstellen Sie neue Blog-Beiträge und teilen Sie Ihr Wissen
                 </p>
-                <Button className="mt-4 w-full bg-accent hover:bg-accent/90">
-                  Ansehen
+                <Button
+                  onClick={() => onNavigate?.("blog")}
+                  className="mt-4 w-full bg-accent hover:bg-accent/90"
+                >
+                  Beitrag erstellen
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-primary/20 to-primary/5 border-primary/30">
+              <CardHeader>
+                <CardTitle className="text-primary">Admin Panel</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Beiträge genehmigen und Inhalte moderieren
+                </p>
+                <Button
+                  onClick={() => onNavigate?.("admin")}
+                  className="mt-4 w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                  Zum Admin-Bereich
                 </Button>
               </CardContent>
             </Card>
@@ -162,14 +525,7 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
 
           <div className="text-center space-y-4">
             <Button
-              onClick={() => {
-                localStorage.removeItem("userEmail");
-                localStorage.removeItem("userLoggedIn");
-                localStorage.removeItem("authToken");
-                setIsLoggedIn(false);
-                setEmail("");
-                setPassword("");
-              }}
+              onClick={handleLogout}
               variant="outline"
               className="w-full md:w-64"
             >
@@ -281,7 +637,7 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
                 </label>
                 <button
                   type="button"
-                  onClick={() => onNavigate?.("contact")}
+                  onClick={() => onNavigate?.("request-password-reset")}
                   className="text-accent hover:text-accent/80 transition-colors"
                 >
                   Passwort vergessen?
@@ -304,7 +660,7 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
                 Noch kein Konto?
               </p>
               <Button
-                onClick={() => onNavigate?.("contact")}
+                onClick={() => onNavigate?.("register")}
                 variant="outline"
                 className="w-full border-accent text-accent hover:bg-accent/10"
               >
@@ -317,9 +673,13 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
                 Test-Zugangsdaten:
               </p>
               <div className="text-xs text-muted-foreground space-y-1">
-                <p>E-Mail: demo@studentenathome.de</p>
+                <p>Benutzer: demo@studentenathome.de</p>
+                <p>Admin: admin@studentenathome.de</p>
                 <p>Passwort: demo123</p>
               </div>
+              <p className="text-xs text-muted-foreground italic mt-2">
+                Hinweis: Nur Admin-Konten können Blogbeiträge genehmigen.
+              </p>
             </div>
           </CardContent>
         </Card>

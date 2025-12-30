@@ -1,11 +1,19 @@
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+
+# Uploaded files
+uploads/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
 
 node_modules
 dist
@@ -30,5 +38,12 @@ packages
 pids
 .file-manifest
 .devcontainer/
+
+# Security - Never commit these!
+NEW_PRODUCTION_SECRETS.md
+*.backup
+.env.backup
+.env.local
+.env.*.local
 
 .spark-workbench-id
