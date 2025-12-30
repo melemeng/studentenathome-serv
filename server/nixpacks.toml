@@ -1,17 +1,12 @@
 # Nixpacks configuration for Railway
-# Force Node.js provider, not static file detection
+# Force Node.js provider
+providers = ["node"]
 
 [phases.setup]
-nixPkgs = ["nodejs_20", "npm"]
+nixPkgs = ["nodejs_20"]
 
 [phases.install]
-cmds = ["npm ci --production"]
-
-[phases.build]
-cmds = ["echo 'No build step needed for backend'"]
+cmds = ["npm ci --omit=dev"]
 
 [start]
-cmd = "npm run db:setup && node index.js"
-
-[variables]
-NODE_ENV = "production"
+cmd = "node index.js"
