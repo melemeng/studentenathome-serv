@@ -1,3 +1,11 @@
-# Ignore everything except server/
-/*
-!/server
+# Ignore everything for Railway deployment
+# We deploy ONLY from the server/ directory directly
+node_modules/
+dist/
+.git/
+.github/
+src/
+public/
+*.md
+*.json
+!server/

@@ -1,0 +1,8 @@
+# Ignore files not needed for Railway deployment
+dist/
+node_modules/
+*.log
+.env
+.env.local
+.env.development
+*.md
