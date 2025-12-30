@@ -1,8 +1,9 @@
 // API configuration that switches between dev and production
-// In production, API calls go to the Railway-hosted backend
-// Update VITE_API_URL in GitHub Actions secrets or use the Railway URL directly
+// Frontend: https://studentenathome.de (GitHub Pages)
+// Backend: Railway-hosted API
 const API_BASE_URL = import.meta.env.PROD
-  ? import.meta.env.VITE_API_URL || "https://studentenathome-api.up.railway.app"
+  ? import.meta.env.VITE_API_URL ||
+    "https://studentenathome-serv-production.up.railway.app"
   : "http://localhost:5000";
 
 export const apiConfig = {
