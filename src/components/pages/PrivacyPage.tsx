@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { useEffect } from "react";
 import setMeta from "@/lib/seo";
 
-export function PrivacyPage() {
+export default function PrivacyPage() {
   useEffect(() => {
     setMeta({
       title: `Datenschutz | ${"StudentenAtHome"}`,
@@ -338,5 +338,3 @@ export function PrivacyPage() {
     </div>
   );
 }
-
-export default PrivacyPage;

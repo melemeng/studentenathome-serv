@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-export function FAQPage() {
+export default function FAQPage() {
   useEffect(() => {
     setMeta({
       title: `FAQ | StudentenAtHome`,
@@ -175,5 +175,3 @@ export function FAQPage() {
     </div>
   );
 }
-
-export default FAQPage;
