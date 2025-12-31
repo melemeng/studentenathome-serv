@@ -276,9 +276,6 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
       setIsLoading(false);
     }
   };
-      }, 1000);
-    }, 1000);
-  };
 
   const handleLogout = async () => {
     try {
