@@ -42,7 +42,7 @@ export function FAQPage() {
       id: "faq-2",
       question: "Welche Gebiete decken Sie ab?",
       answer:
-        "Wir sind in Dresden und Umgebung tätig und bieten auch Remote-Support an. Für Vor-Ort-Termine berechnen wir gegebenenfalls eine Anfahrtspauschale. Kontaktieren Sie uns gerne, um zu klären, ob Ihre Region abgedeckt wird.",
+        "Wir sind deutschlandweit tätig und bieten sowohl Vor-Ort-Service als auch Remote-Support an. Unser Hauptsitz ist in Berlin. Für Vor-Ort-Termine außerhalb Berlins berechnen wir gegebenenfalls eine Anfahrtspauschale. Kontaktieren Sie uns gerne, um zu klären, wie wir Sie am besten unterstützen können.",
     },
     {
       id: "faq-3",

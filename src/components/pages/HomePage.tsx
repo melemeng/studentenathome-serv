@@ -20,9 +20,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
   useEffect(() => {
     setMeta({
-      title: `${siteData.site.brandNames[1]} – Professioneller Tech-Support in Dresden`,
+      title: `${siteData.site.brandNames[1]} – Professioneller Tech-Support in Berlin & Deutschlandweit`,
       description:
-        "StudentenAtHome: Professioneller, lokaler Tech-Support für Privatpersonen und Studierende in Dresden. Hilfe bei Netzwerken, Sicherheit und Einrichtung.",
+        "StudentenAtHome: Professioneller Tech-Support deutschlandweit. Unser Team von Informatikstudenten hilft bei Netzwerken, Sicherheit und Einrichtung. Standort in Berlin, Service in ganz Deutschland.",
       canonical: "/",
       type: "website",
       jsonLd: {
@@ -30,20 +30,35 @@ export function HomePage({ onNavigate }: HomePageProps) {
         "@type": "LocalBusiness",
         name: "StudentenAtHome",
         description:
-          "Professioneller Tech-Support von Informatikstudenten in Dresden",
+          "Professioneller Tech-Support von Informatikstudenten deutschlandweit",
         url: "https://www.studentenathome.de",
         telephone: "+49-176-75444136",
         email: "support@studentenathome.de",
         address: {
           "@type": "PostalAddress",
-          addressLocality: "Dresden",
+          streetAddress: "Musterstraße 123",
+          addressLocality: "Berlin",
+          postalCode: "10115",
           addressCountry: "DE",
         },
         priceRange: "€€",
-        areaServed: {
-          "@type": "City",
-          name: "Dresden",
-        },
+        areaServed: [
+          {
+            "@type": "Country",
+            name: "Deutschland",
+          },
+          {
+            "@type": "City",
+            name: "Berlin",
+          },
+        ],
+        serviceType: [
+          "Tech Support",
+          "Netzwerkkonfiguration",
+          "IT-Hilfe",
+          "Computer Reparatur",
+          "Remote Support",
+        ],
       },
     });
   }, []);

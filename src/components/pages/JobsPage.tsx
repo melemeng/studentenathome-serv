@@ -26,7 +26,7 @@ const jobListings: JobListing[] = [
     id: "1",
     title: "Junior Tech Support Specialist",
     type: "Vollzeit / Teilzeit",
-    location: "Dresden, Deutschland",
+    location: "Berlin / Deutschlandweit / Remote",
     description:
       "Wir suchen engagierte Informatikstudenten und Absolventen, die unseren Kunden helfen möchten. Bieten Sie technische Unterstützung vor Ort und remote an, lösen Sie Probleme und unterstützen Sie private und geschäftliche Kunden.",
     requirements: [
@@ -48,7 +48,7 @@ const jobListings: JobListing[] = [
     id: "2",
     title: "Netzwerk-Administrator / Konfigurateur",
     type: "Vollzeit / Teilzeit",
-    location: "Dresden, Deutschland",
+    location: "Berlin / Deutschlandweit / Remote",
     description:
       "Gesucht: Studenten mit Fachwissen in Netzwerktechnik und Systemkonfiguration. Sie bauen Netzwerke auf, konfigurieren diese und stellen sicher, dass unsere Kunden optimal vernetzt sind.",
     requirements: [
@@ -70,7 +70,7 @@ const jobListings: JobListing[] = [
     id: "3",
     title: "IT-Support Trainer / Schulung",
     type: "Teilzeit",
-    location: "Dresden, Deutschland",
+    location: "Berlin / Deutschlandweit / Remote",
     description:
       "Du hast Freude daran, andere auszubilden? Wir suchen jemanden, der unsere Support-Mitarbeiter schulen und trainieren kann sowie Kunden in ihren Geräten unterweisen kann.",
     requirements: [
@@ -114,7 +114,7 @@ const jobListings: JobListing[] = [
     id: "5",
     title: "Kundenbetreuung / Support-Koordinator",
     type: "Vollzeit / Teilzeit",
-    location: "Dresden, Deutschland",
+    location: "Berlin / Deutschlandweit / Remote",
     description:
       "Du bist kommunikativ und organisiert? Verwalte Kundenanfragen, koordiniere Support-Einsätze, terminiere Termine und stelle sicher, dass unsere Kunden zufrieden sind.",
     requirements: [
@@ -139,7 +139,7 @@ export function JobsPage() {
     setMeta({
       title: `Karriere | StudentenAtHome`,
       description:
-        "Offene Positionen und Vorteile einer Mitarbeit bei StudentenAtHome. Werde Teil unseres Teams in Dresden oder remote.",
+        "Offene Positionen und Vorteile einer Mitarbeit bei StudentenAtHome. Werde Teil unseres Teams in Berlin, deutschlandweit oder remote.",
       canonical: "https://www.studentenathome.de/jobs",
     });
   }, []);
@@ -195,8 +195,8 @@ export function JobsPage() {
                   Vor-Ort oder Remote
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Wähle zwischen Vor-Ort-Support in Dresden oder
-                  Remote-Tätigkeit, wie es dir passt.
+                  Wähle zwischen Vor-Ort-Support in Berlin oder
+                  Remote-Tätigkeit deutschlandweit, wie es dir passt.
                 </p>
               </div>
             </div>
