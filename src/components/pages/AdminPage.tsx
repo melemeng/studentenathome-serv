@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import apiConfig from "@/lib/apiConfig";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -88,7 +89,7 @@ export default function AdminPage() {
 
   const fetchPosts = async (token: string) => {
     try {
-      const res = await fetch("/api/posts?all=true", {
+      const res = await fetch(`${apiConfig.posts.getAll}?all=true`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

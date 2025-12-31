@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import apiConfig from "@/lib/apiConfig";
 import {
   Card,
   CardContent,
@@ -73,7 +74,7 @@ export default function RegisterPage({ onNavigate }: RegisterPageProps) {
     }
 
     try {
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch(apiConfig.auth.register, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

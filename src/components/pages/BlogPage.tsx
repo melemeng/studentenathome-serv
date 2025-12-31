@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import apiConfig from "@/lib/apiConfig";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Clock, User } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -327,7 +328,7 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
     try {
       const token = localStorage.getItem("authToken");
       if (token) {
-        const res = await fetch("/api/posts", {
+        const res = await fetch(apiConfig.posts.create, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

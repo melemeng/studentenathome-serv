@@ -9,6 +9,7 @@ import { siteData } from "@/lib/data";
 import { useState, useEffect } from "react";
 import setMeta from "@/lib/seo";
 import { toast } from "sonner";
+import { apiConfig } from "@/lib/apiConfig";
 
 export default function ContactPage() {
   const { title, howItWorks, ctaIntro, details, form } = siteData.pages.contact;
@@ -64,7 +65,7 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(apiConfig.contact, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
