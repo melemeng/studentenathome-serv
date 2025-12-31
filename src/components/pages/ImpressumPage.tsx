@@ -248,3 +248,5 @@ export function ImpressumPage() {
     </div>
   );
 }
+
+export default ImpressumPage;

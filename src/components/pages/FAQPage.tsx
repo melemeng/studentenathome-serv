@@ -175,3 +175,5 @@ export function FAQPage() {
     </div>
   );
 }
+
+export default FAQPage;
