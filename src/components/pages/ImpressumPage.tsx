@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { useEffect } from "react";
 import setMeta from "@/lib/seo";
 
-export function ImpressumPage() {
+export default function ImpressumPage() {
   useEffect(() => {
     setMeta({
       title: `Impressum | StudentenAtHome`,

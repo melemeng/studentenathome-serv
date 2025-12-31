@@ -134,7 +134,7 @@ const jobListings: JobListing[] = [
   },
 ];
 
-export function JobsPage() {
+export default function JobsPage() {
   useEffect(() => {
     setMeta({
       title: `Karriere | StudentenAtHome`,
