@@ -316,5 +316,3 @@ export default function RegisterPage({ onNavigate }: RegisterPageProps) {
     </div>
   );
 }
-
-export default RegisterPage;

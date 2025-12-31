@@ -116,7 +116,7 @@ function formatTimeRemaining(ms: number): string {
   return `${minutes} Minute${minutes !== 1 ? "n" : ""}`;
 }
 
-export function LoginPage({ onNavigate }: LoginPageProps) {
+export default function LoginPage({ onNavigate }: LoginPageProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -275,9 +275,6 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
       setError("Verbindungsfehler. Bitte versuchen Sie es später erneut.");
       setIsLoading(false);
     }
-  };
-      }, 1000);
-    }, 1000);
   };
 
   const handleLogout = async () => {
