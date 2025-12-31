@@ -8,6 +8,8 @@
     "start": "node index.js",
     "postinstall": "echo 'Dependencies installed'",
     "db:setup": "node database/setup.js",
+    "db:verify": "node database/verify.js",
+    "db:seed-jobs": "node database/seed-jobs.js",
     "migrate": "node database/migrate.js"
   },
   "dependencies": {
