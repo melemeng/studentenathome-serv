@@ -3,6 +3,7 @@
 -- ============================================
 
 -- Drop existing tables if rebuilding
+DROP TABLE IF EXISTS jobs CASCADE;
 DROP TABLE IF EXISTS audit_log CASCADE;
 DROP TABLE IF EXISTS failed_login_attempts CASCADE;
 DROP TABLE IF EXISTS revoked_tokens CASCADE;
@@ -76,6 +77,33 @@ CREATE TABLE posts (
 );
 
 -- ============================================
+-- JOBS TABLE
+-- ============================================
+CREATE TABLE jobs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title VARCHAR(255) NOT NULL,
+  type VARCHAR(100) NOT NULL,
+  location VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  requirements JSONB NOT NULL DEFAULT '[]',
+  benefits JSONB NOT NULL DEFAULT '[]',
+  
+  -- Status and visibility
+  status VARCHAR(20) DEFAULT 'active' NOT NULL,
+  is_published BOOLEAN DEFAULT TRUE NOT NULL,
+  
+  -- Tracking
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  
+  -- Constraints
+  CONSTRAINT status_valid CHECK (status IN ('active', 'inactive', 'archived')),
+  CONSTRAINT title_length CHECK (LENGTH(title) >= 5 AND LENGTH(title) <= 255),
+  CONSTRAINT description_length CHECK (LENGTH(description) >= 20)
+);
+
+-- ============================================
 -- REVOKED TOKENS TABLE (for JWT blacklist)
 -- ============================================
 CREATE TABLE revoked_tokens (
@@ -133,6 +161,12 @@ CREATE INDEX idx_posts_slug ON posts(slug);
 CREATE INDEX idx_posts_category ON posts(category);
 CREATE INDEX idx_posts_published_at ON posts(published_at) WHERE status = 'approved';
 
+-- Jobs indexes
+CREATE INDEX idx_jobs_status ON jobs(status);
+CREATE INDEX idx_jobs_is_published ON jobs(is_published) WHERE is_published = true;
+CREATE INDEX idx_jobs_created_at ON jobs(created_at);
+CREATE INDEX idx_jobs_published_at ON jobs(published_at) WHERE is_published = true;
+
 -- Revoked tokens indexes
 CREATE INDEX idx_revoked_tokens_jti ON revoked_tokens(token_jti);
 CREATE INDEX idx_revoked_tokens_expires ON revoked_tokens(expires_at);
@@ -167,6 +201,11 @@ EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_posts_updated_at
 BEFORE UPDATE ON posts
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_jobs_updated_at
+BEFORE UPDATE ON jobs
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
