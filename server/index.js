@@ -1368,14 +1368,14 @@ app.post("/api/jobs", apiLimiter, authenticateToken, async (req, res) => {
         .json({ error: "At least one benefit is required" });
     }
 
-    // Sanitize inputs
+    // Sanitize inputs (trimming only - HTML escaping not needed for job data)
     const sanitizedJob = {
-      title: validator.escape(job.title.trim()),
-      type: validator.escape(job.type.trim()),
-      location: validator.escape(job.location.trim()),
-      description: validator.escape(job.description.trim()),
-      requirements: job.requirements.map((r) => validator.escape(r.trim())),
-      benefits: job.benefits.map((b) => validator.escape(b.trim())),
+      title: job.title.trim(),
+      type: job.type.trim(),
+      location: job.location.trim(),
+      description: job.description.trim(),
+      requirements: job.requirements.map((r) => r.trim()),
+      benefits: job.benefits.map((b) => b.trim()),
       status: job.status || "active",
       is_published: job.is_published !== undefined ? job.is_published : true,
     };
@@ -1440,14 +1440,14 @@ app.put("/api/jobs/:id", apiLimiter, authenticateToken, async (req, res) => {
         .json({ error: "At least one benefit is required" });
     }
 
-    // Sanitize inputs
+    // Sanitize inputs (trimming only - HTML escaping not needed for job data)
     const sanitizedJob = {
-      title: validator.escape(job.title.trim()),
-      type: validator.escape(job.type.trim()),
-      location: validator.escape(job.location.trim()),
-      description: validator.escape(job.description.trim()),
-      requirements: job.requirements.map((r) => validator.escape(r.trim())),
-      benefits: job.benefits.map((b) => validator.escape(b.trim())),
+      title: job.title.trim(),
+      type: job.type.trim(),
+      location: job.location.trim(),
+      description: job.description.trim(),
+      requirements: job.requirements.map((r) => r.trim()),
+      benefits: job.benefits.map((b) => b.trim()),
       status: job.status || "active",
       is_published: job.is_published !== undefined ? job.is_published : true,
     };

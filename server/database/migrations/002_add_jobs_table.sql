@@ -45,4 +45,3 @@ COMMENT ON COLUMN jobs.benefits IS 'JSON array of job benefit strings';
 COMMENT ON COLUMN jobs.status IS 'Job status: active (accepting applications), inactive (not shown), archived (kept for records)';
 COMMENT ON COLUMN jobs.is_published IS 'Whether the job is visible to the public';
 
-COMMIT;

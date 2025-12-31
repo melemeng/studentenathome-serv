@@ -159,10 +159,10 @@ export default function JobsPage() {
           throw new Error("Failed to fetch jobs from API");
         }
 
-        const data = await response.json();
+        const data: JobListing[] = await response.json();
         
         // Parse JSONB fields if they are strings
-        const parsedJobs = data.map((job: any) => ({
+        const parsedJobs = data.map((job) => ({
           ...job,
           requirements: typeof job.requirements === 'string' 
             ? JSON.parse(job.requirements) 
