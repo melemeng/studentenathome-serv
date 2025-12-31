@@ -6,9 +6,11 @@
     <title>StudentenAtHome - Seite wird geladen...</title>
     <script>
       // Single Page Application redirect for GitHub Pages
-      // Store the path and redirect to index
-      sessionStorage.redirect = location.href;
-      location.replace('/');
+      // Store the path and redirect to index (only if not already at root)
+      if (location.pathname !== '/' && location.pathname !== '/index.html') {
+        sessionStorage.redirect = location.href;
+        location.replace('/');
+      }
     </script>
     <style>
       body {
