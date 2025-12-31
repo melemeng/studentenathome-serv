@@ -20,9 +20,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
   useEffect(() => {
     setMeta({
-      title: `${siteData.site.brandNames[1]} – Professioneller Tech-Support in Dresden`,
+      title: `${siteData.site.brandNames[1]} – Professioneller Tech-Support in Berlin & Deutschlandweit`,
       description:
-        "StudentenAtHome: Professioneller, lokaler Tech-Support für Privatpersonen und Studierende in Dresden. Hilfe bei Netzwerken, Sicherheit und Einrichtung.",
+        "StudentenAtHome: Professioneller Tech-Support deutschlandweit. Unser Team von Informatikstudenten hilft bei Netzwerken, Sicherheit und Einrichtung. Standort in Berlin, Service in ganz Deutschland.",
       canonical: "/",
       type: "website",
       jsonLd: {
@@ -30,20 +30,35 @@ export function HomePage({ onNavigate }: HomePageProps) {
         "@type": "LocalBusiness",
         name: "StudentenAtHome",
         description:
-          "Professioneller Tech-Support von Informatikstudenten in Dresden",
+          "Professioneller Tech-Support von Informatikstudenten deutschlandweit",
         url: "https://www.studentenathome.de",
         telephone: "+49-176-75444136",
         email: "support@studentenathome.de",
         address: {
           "@type": "PostalAddress",
-          addressLocality: "Dresden",
+          streetAddress: "Musterstraße 123",
+          addressLocality: "Berlin",
+          postalCode: "10115",
           addressCountry: "DE",
         },
         priceRange: "€€",
-        areaServed: {
-          "@type": "City",
-          name: "Dresden",
-        },
+        areaServed: [
+          {
+            "@type": "Country",
+            name: "Deutschland",
+          },
+          {
+            "@type": "City",
+            name: "Berlin",
+          },
+        ],
+        serviceType: [
+          "Tech Support",
+          "Netzwerkkonfiguration",
+          "IT-Hilfe",
+          "Computer Reparatur",
+          "Remote Support",
+        ],
       },
     });
   }, []);
@@ -73,6 +88,19 @@ export function HomePage({ onNavigate }: HomePageProps) {
     transition: { duration: 0.5 },
   };
 
+  // Reduced motion for mobile and accessibility
+  const prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const animationProps = prefersReducedMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 20 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true },
+      };
+
   return (
     <div className="min-h-screen">
       <section className="relative overflow-hidden py-20 md:py-32 min-h-[600px] md:min-h-[700px] flex items-center">
@@ -81,6 +109,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
           style={{
             backgroundImage: `url(${landingPageBg})`,
           }}
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-accent/60" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,oklch(0.35_0.08_250_/_0.3),transparent_50%)]" />
@@ -117,12 +146,10 @@ export function HomePage({ onNavigate }: HomePageProps) {
             {valueProps.map((prop, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                {...animationProps}
+                transition={{ delay: prefersReducedMotion ? 0 : index * 0.1 }}
               >
-                <Card className="p-8 h-full hover:shadow-lg transition-all hover:scale-[1.02] border-border/50">
+                <Card className="p-8 h-full hover:shadow-lg transition-shadow border-border/50">
                   <h3 className="text-xl font-semibold mb-4 text-foreground">
                     {prop.title}
                   </h3>

@@ -33,9 +33,9 @@ export function ImpressumPage() {
               </p>
               <p>Studenten Helfen UG</p>
               <p>
-                Klingestraße 13C
+                Musterstraße 123
                 <br />
-                01159 Dresden
+                10115 Berlin
               </p>
               <p>
                 <strong>Telefon:</strong> +49 176 75444136
@@ -67,7 +67,8 @@ export function ImpressumPage() {
             </h2>
             <div className="space-y-2 text-sm leading-relaxed">
               <p>
-                <strong>Eintrag im Handelsregister:</strong> Amtsgericht Dresden
+                <strong>Eintrag im Handelsregister:</strong> Amtsgericht
+                Charlottenburg (Berlin)
               </p>
               <p>
                 <strong>Registrierungsnummer:</strong> HRB [Nummer]

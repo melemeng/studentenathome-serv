@@ -48,9 +48,9 @@ export function PrivacyPage() {
               <p className="ml-4">
                 Studenten Helfen UG
                 <br />
-                Klingestraße 13C
+                Musterstraße 123
                 <br />
-                01159 Dresden
+                10115 Berlin
                 <br />
                 E-Mail: support@studentenathome.de
                 <br />
