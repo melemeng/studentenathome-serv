@@ -17,6 +17,7 @@ import jwt from "jsonwebtoken";
 import {
   userQueries,
   postQueries,
+  jobQueries,
   failedLoginQueries,
   auditQueries,
 } from "./database/db.js";
@@ -1274,6 +1275,269 @@ app.delete("/api/posts/:id", apiLimiter, async (req, res) => {
   } catch (error) {
     console.error("Delete post error:", error);
     res.status(500).json({ error: "Failed to delete post" });
+  }
+});
+
+// ============================================
+// JOB LISTINGS ENDPOINTS
+// ============================================
+
+// Get all job listings (public or admin view)
+app.get("/api/jobs", apiLimiter, async (req, res) => {
+  try {
+    const showAll = req.query.all === "true";
+    const token = req.headers.authorization?.replace(/^Bearer\s+/i, "");
+
+    // Only admins can see all jobs (including inactive)
+    if (showAll && token === ADMIN_TOKEN) {
+      const allJobs = await jobQueries.findAll(true);
+      res.set("Cache-Control", "no-cache");
+      return res.json(allJobs);
+    }
+
+    // Public: only show active published jobs
+    const activeJobs = await jobQueries.findAll(false);
+    res.set("Cache-Control", "public, max-age=600"); // 10 minutes
+    res.json(activeJobs);
+  } catch (error) {
+    console.error("Get jobs error:", error);
+    res.status(500).json({ error: "Fehler beim Laden der Stellenangebote" });
+  }
+});
+
+// Get single job by ID
+app.get("/api/jobs/:id", apiLimiter, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const job = await jobQueries.findById(id);
+
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    // Check if user is admin for inactive jobs
+    const token = req.headers.authorization?.replace(/^Bearer\s+/i, "");
+    if (job.status !== "active" && token !== ADMIN_TOKEN) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    res.json(job);
+  } catch (error) {
+    console.error("Get job error:", error);
+    res.status(500).json({ error: "Fehler beim Laden des Stellenangebots" });
+  }
+});
+
+// Create new job (admin only)
+app.post("/api/jobs", apiLimiter, authenticateToken, async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ error: "Admin access required" });
+    }
+
+    const job = req.body;
+
+    // Validation
+    if (!job.title || job.title.length < 5 || job.title.length > 255) {
+      return res
+        .status(400)
+        .json({ error: "Title must be between 5 and 255 characters" });
+    }
+
+    if (!job.description || job.description.length < 20) {
+      return res
+        .status(400)
+        .json({ error: "Description must be at least 20 characters" });
+    }
+
+    if (!job.type || !job.location) {
+      return res
+        .status(400)
+        .json({ error: "Type and location are required" });
+    }
+
+    if (!Array.isArray(job.requirements) || job.requirements.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "At least one requirement is required" });
+    }
+
+    if (!Array.isArray(job.benefits) || job.benefits.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "At least one benefit is required" });
+    }
+
+    // Sanitize inputs
+    const sanitizedJob = {
+      title: validator.escape(job.title.trim()),
+      type: validator.escape(job.type.trim()),
+      location: validator.escape(job.location.trim()),
+      description: validator.escape(job.description.trim()),
+      requirements: job.requirements.map((r) => validator.escape(r.trim())),
+      benefits: job.benefits.map((b) => validator.escape(b.trim())),
+      status: job.status || "active",
+      is_published: job.is_published !== undefined ? job.is_published : true,
+    };
+
+    // Create job
+    const newJob = await jobQueries.create(sanitizedJob);
+
+    // Log audit event
+    await auditQueries.log({
+      user_id: req.user.id,
+      action: "job_created",
+      ip_address: req.ip,
+      user_agent: req.headers["user-agent"],
+      details: { job_id: newJob.id, title: newJob.title },
+    });
+
+    res.status(201).json(newJob);
+  } catch (error) {
+    console.error("Create job error:", error);
+    res.status(500).json({ error: "Failed to create job" });
+  }
+});
+
+// Update job (admin only)
+app.put("/api/jobs/:id", apiLimiter, authenticateToken, async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ error: "Admin access required" });
+    }
+
+    const { id } = req.params;
+    const job = req.body;
+
+    // Validation
+    if (job.title && (job.title.length < 5 || job.title.length > 255)) {
+      return res
+        .status(400)
+        .json({ error: "Title must be between 5 and 255 characters" });
+    }
+
+    if (job.description && job.description.length < 20) {
+      return res
+        .status(400)
+        .json({ error: "Description must be at least 20 characters" });
+    }
+
+    if (
+      job.requirements &&
+      (!Array.isArray(job.requirements) || job.requirements.length === 0)
+    ) {
+      return res
+        .status(400)
+        .json({ error: "At least one requirement is required" });
+    }
+
+    if (
+      job.benefits &&
+      (!Array.isArray(job.benefits) || job.benefits.length === 0)
+    ) {
+      return res
+        .status(400)
+        .json({ error: "At least one benefit is required" });
+    }
+
+    // Sanitize inputs
+    const sanitizedJob = {
+      title: validator.escape(job.title.trim()),
+      type: validator.escape(job.type.trim()),
+      location: validator.escape(job.location.trim()),
+      description: validator.escape(job.description.trim()),
+      requirements: job.requirements.map((r) => validator.escape(r.trim())),
+      benefits: job.benefits.map((b) => validator.escape(b.trim())),
+      status: job.status || "active",
+      is_published: job.is_published !== undefined ? job.is_published : true,
+    };
+
+    // Update job
+    const updatedJob = await jobQueries.update(id, sanitizedJob);
+
+    if (!updatedJob) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    // Log audit event
+    await auditQueries.log({
+      user_id: req.user.id,
+      action: "job_updated",
+      ip_address: req.ip,
+      user_agent: req.headers["user-agent"],
+      details: { job_id: updatedJob.id, title: updatedJob.title },
+    });
+
+    res.json(updatedJob);
+  } catch (error) {
+    console.error("Update job error:", error);
+    res.status(500).json({ error: "Failed to update job" });
+  }
+});
+
+// Update job status (admin only)
+app.patch("/api/jobs/:id", apiLimiter, authenticateToken, async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ error: "Admin access required" });
+    }
+
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!["active", "inactive", "archived"].includes(status)) {
+      return res.status(400).json({ error: "Invalid status" });
+    }
+
+    const updatedJob = await jobQueries.updateStatus(id, status);
+
+    if (!updatedJob) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    // Log audit event
+    await auditQueries.log({
+      user_id: req.user.id,
+      action: "job_status_updated",
+      ip_address: req.ip,
+      user_agent: req.headers["user-agent"],
+      details: { job_id: updatedJob.id, status },
+    });
+
+    res.json(updatedJob);
+  } catch (error) {
+    console.error("Update job status error:", error);
+    res.status(500).json({ error: "Failed to update job status" });
+  }
+});
+
+// Delete job (admin only)
+app.delete("/api/jobs/:id", apiLimiter, authenticateToken, async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ error: "Admin access required" });
+    }
+
+    const { id } = req.params;
+    const deleted = await jobQueries.delete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    // Log audit event
+    await auditQueries.log({
+      user_id: req.user.id,
+      action: "job_deleted",
+      ip_address: req.ip,
+      user_agent: req.headers["user-agent"],
+      details: { job_id: deleted.id, title: deleted.title },
+    });
+
+    res.json({ message: "Job deleted successfully" });
+  } catch (error) {
+    console.error("Delete job error:", error);
+    res.status(500).json({ error: "Failed to delete job" });
   }
 });
 

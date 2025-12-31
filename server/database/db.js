@@ -356,4 +356,94 @@ export const auditQueries = {
   },
 };
 
+// Job queries
+export const jobQueries = {
+  findAll: async (includeInactive = false) => {
+    let queryText = "SELECT * FROM jobs";
+    let params = [];
+
+    if (!includeInactive) {
+      queryText += " WHERE status = 'active' AND is_published = true ORDER BY published_at DESC";
+    } else {
+      queryText += " ORDER BY created_at DESC";
+    }
+
+    const result = await query(queryText, params);
+    return result.rows;
+  },
+
+  findById: async (id) => {
+    const result = await query("SELECT * FROM jobs WHERE id = $1", [id]);
+    return result.rows[0];
+  },
+
+  create: async (job) => {
+    const result = await query(
+      `INSERT INTO jobs (
+        title, type, location, description, requirements, benefits, status, is_published
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      RETURNING *`,
+      [
+        job.title,
+        job.type,
+        job.location,
+        job.description,
+        JSON.stringify(job.requirements || []),
+        JSON.stringify(job.benefits || []),
+        job.status || "active",
+        job.is_published !== undefined ? job.is_published : true,
+      ]
+    );
+    return result.rows[0];
+  },
+
+  update: async (id, job) => {
+    const result = await query(
+      `UPDATE jobs 
+       SET title = $1,
+           type = $2,
+           location = $3,
+           description = $4,
+           requirements = $5,
+           benefits = $6,
+           status = $7,
+           is_published = $8,
+           updated_at = NOW()
+       WHERE id = $9 
+       RETURNING *`,
+      [
+        job.title,
+        job.type,
+        job.location,
+        job.description,
+        JSON.stringify(job.requirements || []),
+        JSON.stringify(job.benefits || []),
+        job.status,
+        job.is_published,
+        id,
+      ]
+    );
+    return result.rows[0];
+  },
+
+  updateStatus: async (id, status) => {
+    const result = await query(
+      `UPDATE jobs 
+       SET status = $1,
+           updated_at = NOW()
+       WHERE id = $2 
+       RETURNING *`,
+      [status, id]
+    );
+    return result.rows[0];
+  },
+
+  delete: async (id) => {
+    const result = await query("DELETE FROM jobs WHERE id = $1 RETURNING *", [
+      id,
+    ]);
+    return result.rows[0];
+  },
+};
+
 export default pool;

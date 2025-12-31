@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import setMeta from "@/lib/seo";
 import {
   Card,
@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Briefcase, GraduationCap } from "lucide-react";
+import { MapPin, Briefcase, GraduationCap, Loader2 } from "lucide-react";
 
 interface JobListing {
   id: string;
@@ -21,7 +21,7 @@ interface JobListing {
   benefits: string[];
 }
 
-const jobListings: JobListing[] = [
+const staticJobListings: JobListing[] = [
   {
     id: "1",
     title: "Junior Tech Support Specialist",
@@ -134,7 +134,14 @@ const jobListings: JobListing[] = [
   },
 ];
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "https://studentenathome-api.up.railway.app";
+
 export default function JobsPage() {
+  const [jobListings, setJobListings] = useState<JobListing[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     setMeta({
       title: `Karriere | StudentenAtHome`,
@@ -142,7 +149,55 @@ export default function JobsPage() {
         "Offene Positionen und Vorteile einer Mitarbeit bei StudentenAtHome. Werde Teil unseres Teams in Berlin, deutschlandweit oder remote.",
       canonical: "https://www.studentenathome.de/jobs",
     });
+
+    // Fetch jobs from API
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/jobs`);
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch jobs from API");
+        }
+
+        const data = await response.json();
+        
+        // Parse JSONB fields if they are strings
+        const parsedJobs = data.map((job: any) => ({
+          ...job,
+          requirements: typeof job.requirements === 'string' 
+            ? JSON.parse(job.requirements) 
+            : job.requirements,
+          benefits: typeof job.benefits === 'string' 
+            ? JSON.parse(job.benefits) 
+            : job.benefits,
+        }));
+
+        setJobListings(parsedJobs);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching jobs:", err);
+        setError("Using static job listings");
+        // Fallback to static data
+        setJobListings(staticJobListings);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-accent" />
+          <p className="text-muted-foreground">Lade Stellenangebote...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
       <div className="container mx-auto max-w-5xl px-6 py-20">
@@ -154,6 +209,11 @@ export default function JobsPage() {
             Werde Teil unseres Teams und hilf anderen Menschen, ihre
             Technik-Herausforderungen zu meistern
           </p>
+          {error && (
+            <p className="text-sm text-yellow-600 dark:text-yellow-500 mt-2">
+              ⚠️ API nicht erreichbar - zeige statische Stellenangebote
+            </p>
+          )}
         </div>
 
         <Separator className="mb-12" />
