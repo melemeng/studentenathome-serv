@@ -52,13 +52,22 @@ export default defineConfig({
       output: {
         manualChunks: {
           "react-vendor": ["react", "react-dom"],
-          "ui-vendor": ["lucide-react"],
+          "framer-motion": ["framer-motion"],
+          "radix-ui": [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-popover",
+            "@radix-ui/react-select",
+            "@radix-ui/react-accordion",
+          ],
+          "ui-icons": ["lucide-react", "@phosphor-icons/react"],
         },
       },
     },
     cssCodeSplit: true,
     sourcemap: false,
     chunkSizeWarningLimit: 500,
+    reportCompressedSize: false, // Faster builds
   },
   server: {
     historyApiFallback: true,
