@@ -664,20 +664,6 @@ export default function LoginPage({ onNavigate }: LoginPageProps) {
                 Jetzt registrieren
               </Button>
             </div>
-
-            <div className="p-4 bg-accent/5 border border-accent/20 rounded-lg space-y-2">
-              <p className="font-semibold text-foreground text-sm">
-                Test-Zugangsdaten:
-              </p>
-              <div className="text-xs text-muted-foreground space-y-1">
-                <p>Benutzer: demo@studentenathome.de</p>
-                <p>Admin: admin@studentenathome.de</p>
-                <p>Passwort: demo123</p>
-              </div>
-              <p className="text-xs text-muted-foreground italic mt-2">
-                Hinweis: Nur Admin-Konten können Blogbeiträge genehmigen.
-              </p>
-            </div>
           </CardContent>
         </Card>
 
