@@ -718,7 +718,7 @@ app.post(
             <p>
               <strong>Support:</strong><br>
               E-Mail: support@studentenathome.de<br>
-              Telefon: +49 176 75444136
+              Telefon: +49 179 4104323
             </p>
           </div>
         `,
@@ -834,7 +834,7 @@ Diese Nachricht wurde über das Kontaktformular auf studentenathome.de gesendet.
           <div style="margin: 30px 0; padding: 20px; background-color: #e7f3ff; border-radius: 8px;">
             <p style="margin: 0;"><strong>Kontakt:</strong></p>
             <p style="margin: 5px 0;">📧 support@studentenathome.de</p>
-            <p style="margin: 5px 0;">📞 +49 176 75444136</p>
+            <p style="margin: 5px 0;">📞 +49 179 4104323</p>
             <p style="margin: 5px 0;">📍 Klingestraße 13C, 01159 Dresden</p>
           </div>
           
@@ -861,7 +861,7 @@ In der Regel antworten wir innerhalb von 24 Stunden während der Geschäftszeite
 
 Kontakt:
 E-Mail: support@studentenathome.de
-Telefon: +49 176 75444136
+Telefon: +49 179 4104323
 Adresse: Klingestraße 13C, 01159 Dresden
 
 Mit freundlichen Grüßen,

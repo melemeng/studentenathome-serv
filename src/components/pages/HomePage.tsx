@@ -32,7 +32,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
         description:
           "Professioneller Tech-Support von Informatikstudenten deutschlandweit",
         url: "https://www.studentenathome.de",
-        telephone: "+49-176-75444136",
+        telephone: "+49-179-4104323",
         email: "support@studentenathome.de",
         address: {
           "@type": "PostalAddress",
