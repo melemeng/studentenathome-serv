@@ -664,8 +664,6 @@ export default function LoginPage({ onNavigate }: LoginPageProps) {
                 Jetzt registrieren
               </Button>
             </div>
-
-
           </CardContent>
         </Card>
 
