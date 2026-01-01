@@ -36,7 +36,7 @@ export default function FAQPage() {
       id: "faq-1",
       question: "Wie buche ich einen Termin?",
       answer:
-        "Sie können uns ganz einfach über unser Kontaktformular, per E-Mail (support@studentenathome.de) oder telefonisch unter +49 176 75444136 erreichen. Schildern Sie uns Ihr Problem, und wir machen Ihnen einen Terminvorschlag.",
+        "Sie können uns ganz einfach über unser Kontaktformular, per E-Mail (support@studentenathome.de) oder telefonisch unter +49 179 4104323 erreichen. Schildern Sie uns Ihr Problem, und wir machen Ihnen einen Terminvorschlag.",
     },
     {
       id: "faq-2",
@@ -164,10 +164,10 @@ export default function FAQPage() {
               support@studentenathome.de
             </a>
             <a
-              href="tel:+491767544136"
+              href="tel:+491794104323"
               className="inline-flex items-center justify-center px-6 py-3 border border-accent text-accent hover:bg-accent/10 font-semibold rounded-lg transition-colors"
             >
-              +49 176 75444136
+              +49 179 4104323
             </a>
           </div>
         </div>

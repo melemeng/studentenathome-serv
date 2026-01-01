@@ -54,7 +54,7 @@ export default function PrivacyPage() {
                 <br />
                 E-Mail: support@studentenathome.de
                 <br />
-                Telefon: +49 176 75444136
+                Telefon: +49 179 4104323
               </p>
             </div>
           </section>
@@ -268,7 +268,7 @@ export default function PrivacyPage() {
                 Zur Geltendmachung dieser Rechte kontaktieren Sie uns unter:
               </p>
               <p className="ml-4">
-                support@studentenathome.de oder +49 176 75444136
+                support@studentenathome.de oder +49 179 4104323
               </p>
             </div>
           </section>
@@ -309,7 +309,7 @@ export default function PrivacyPage() {
                 <br />
                 E-Mail: support@studentenathome.de
                 <br />
-                Telefon: +49 176 75444136
+                Telefon: +49 179 4104323
               </p>
             </div>
           </section>

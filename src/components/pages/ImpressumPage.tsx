@@ -38,7 +38,7 @@ export default function ImpressumPage() {
                 10115 Berlin
               </p>
               <p>
-                <strong>Telefon:</strong> +49 176 75444136
+                <strong>Telefon:</strong> +49 179 4104323
                 <br />
               </p>
               <p>

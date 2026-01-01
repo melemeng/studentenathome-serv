@@ -222,8 +222,8 @@ export const siteData = {
         "Kontaktieren Sie uns – schildern Sie kurz Ihr Problem, wir melden uns mit einem Lösungsvorschlag.",
       details: {
         address: "Musterstraße 123, 10115 Berlin",
-        telephone: "+49 176 75444136",
-        telephoneLink: "tel:+49 176 75444136",
+        telephone: "+49 179 4104323",
+        telephoneLink: "tel:+491794104323",
         email: "support@studentenathome.de",
         emailLink: "mailto:support@studentenathome.de",
       },
