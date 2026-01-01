@@ -223,7 +223,7 @@ export const siteData = {
       details: {
         address: "Musterstraße 123, 10115 Berlin",
         telephone: "+49 179 4104323",
-        telephoneLink: "tel:+49 179 4104323",
+        telephoneLink: "tel:+491794104323",
         email: "support@studentenathome.de",
         emailLink: "mailto:support@studentenathome.de",
       },
