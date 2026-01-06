@@ -14,6 +14,7 @@ import { Eye, EyeOff, Mail, Lock, CheckCircle2, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { authStore } from "@/lib/authStore";
 import apiConfig from "@/lib/apiConfig";
+import { fetchWithCsrf, refreshCsrfToken } from "@/lib/csrf";
 
 interface LoginPageProps {
   onNavigate?: (page: string) => void;
@@ -161,6 +162,9 @@ export default function LoginPage({ onNavigate }: LoginPageProps) {
       }
     }
 
+    // Fetch CSRF token for login form
+    refreshCsrfToken();
+
     setIsLoading(false);
   }, []);
 
@@ -222,7 +226,7 @@ export default function LoginPage({ onNavigate }: LoginPageProps) {
     }
 
     try {
-      const response = await fetch(apiConfig.auth.login, {
+      const response = await fetchWithCsrf(apiConfig.auth.login, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -247,13 +251,14 @@ export default function LoginPage({ onNavigate }: LoginPageProps) {
 
       // Store JWT token and user data
       authStore.login(data.token, data.user);
-      setCurrentSession({
+      const session = {
         email: data.user.email,
         token: data.token,
         isAdmin: data.user.isAdmin,
         expiresAt: Date.now() + SESSION_DURATION,
         createdAt: Date.now(),
-      });
+      };
+      setCurrentSession(session);
       setIsLoggedIn(true);
       setIsLoading(false);
 
@@ -283,7 +288,7 @@ export default function LoginPage({ onNavigate }: LoginPageProps) {
       
       if (token) {
         // Call backend logout endpoint to revoke token
-        await fetch(apiConfig.auth.logout, {
+        await fetchWithCsrf(apiConfig.auth.logout, {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${token}`,

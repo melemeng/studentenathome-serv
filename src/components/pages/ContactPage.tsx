@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import setMeta from "@/lib/seo";
 import { toast } from "sonner";
 import { apiConfig } from "@/lib/apiConfig";
+import { fetchWithCsrf, refreshCsrfToken } from "@/lib/csrf";
 
 export default function ContactPage() {
   const { title, howItWorks, ctaIntro, details, form } = siteData.pages.contact;
@@ -65,7 +66,7 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(apiConfig.contact, {
+      const response = await fetchWithCsrf(apiConfig.contact, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,6 +123,8 @@ export default function ContactPage() {
       canonical: "/contact",
       type: "website",
     });
+    // Fetch CSRF token for contact form
+    refreshCsrfToken();
   }, [title, ctaIntro]);
 
   return (

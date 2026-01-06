@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import apiConfig from "@/lib/apiConfig";
 import {
@@ -17,6 +17,7 @@ import {
   PasswordStrengthMeter,
   calculatePasswordStrength,
 } from "@/components/ui/password-strength-meter";
+import { fetchWithCsrf, refreshCsrfToken } from "@/lib/csrf";
 
 interface RegisterPageProps {
   onNavigate?: (page: string) => void;
@@ -32,6 +33,11 @@ export default function RegisterPage({ onNavigate }: RegisterPageProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  // Fetch CSRF token on component mount
+  useEffect(() => {
+    refreshCsrfToken();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +80,7 @@ export default function RegisterPage({ onNavigate }: RegisterPageProps) {
     }
 
     try {
-      const response = await fetch(apiConfig.auth.register, {
+      const response = await fetchWithCsrf(apiConfig.auth.register, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
