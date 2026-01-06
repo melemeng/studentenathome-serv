@@ -117,8 +117,11 @@ app.use(requestLogger);
 // CSRF Protection for state-changing operations
 // Apply to all routes except public GET requests
 app.use("/api/auth/register", verifyCsrfToken);
-app.use("/api/auth/login", attachCsrfToken); // Attach token on login page
+app.use("/api/auth/login", verifyCsrfToken);
 app.use("/api/auth/logout", verifyCsrfToken);
+app.use("/api/auth/request-password-reset", verifyCsrfToken);
+app.use("/api/auth/reset-password", verifyCsrfToken);
+app.use("/api/auth/resend-verification", verifyCsrfToken);
 app.use("/api/contact", verifyCsrfToken);
 app.use("/api/posts", (req, res, next) => {
   if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {

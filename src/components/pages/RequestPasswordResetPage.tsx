@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { Mail, CheckCircle2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import apiConfig from "@/lib/apiConfig";
+import { fetchWithCsrf, refreshCsrfToken } from "@/lib/csrf";
 
 interface RequestPasswordResetPageProps {
   onNavigate?: (page: string) => void;
@@ -35,6 +36,8 @@ export default function RequestPasswordResetPage({
         canonical: "https://www.studentenathome.de/request-password-reset",
       });
     });
+    // Fetch CSRF token
+    refreshCsrfToken();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,7 +58,7 @@ export default function RequestPasswordResetPage({
     }
 
     try {
-      const response = await fetch(apiConfig.auth.requestPasswordReset, {
+      const response = await fetchWithCsrf(apiConfig.auth.requestPasswordReset, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

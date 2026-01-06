@@ -17,6 +17,7 @@ import {
   PasswordStrengthMeter,
   calculatePasswordStrength,
 } from "@/components/ui/password-strength-meter";
+import { fetchWithCsrf, refreshCsrfToken } from "@/lib/csrf";
 
 interface ResetPasswordPageProps {
   onNavigate?: (page: string) => void;
@@ -51,6 +52,9 @@ export default function ResetPasswordPage({
         canonical: "https://www.studentenathome.de/reset-password",
       });
     });
+    
+    // Fetch CSRF token
+    refreshCsrfToken();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -87,7 +91,7 @@ export default function ResetPasswordPage({
     }
 
     try {
-      const response = await fetch(apiConfig.auth.resetPassword, {
+      const response = await fetchWithCsrf(apiConfig.auth.resetPassword, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
