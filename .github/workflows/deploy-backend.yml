@@ -22,10 +22,11 @@ jobs:
       - name: Deploy to Railway
         run: |
           cd server
-          if [ -n "${{ secrets.RAILWAY_SERVICE_ID }}" ]; then
-            railway up --service ${{ secrets.RAILWAY_SERVICE_ID }}
+          if [ -n "$RAILWAY_SERVICE_ID" ]; then
+            railway up --service "$RAILWAY_SERVICE_ID"
           else
             railway up
           fi
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
