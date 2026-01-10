@@ -22,9 +22,6 @@ jobs:
       - name: Deploy to Railway
         run: |
           cd server
-          railway link --project "$RAILWAY_PROJECT_ID" --service "$RAILWAY_SERVICE_ID" --environment production
-          railway up
+          RAILWAY_TOKEN="${{ secrets.RAILWAY_TOKEN }}" railway up -s "${{ secrets.RAILWAY_SERVICE_ID }}"
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
