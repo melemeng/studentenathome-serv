@@ -31,7 +31,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
         "@type": "LocalBusiness",
         "@id": "https://www.studentenathome.de/#organization",
         name: "StudentenAtHome",
-        alternateName: "Studenten Helfen",
+        alternateName: "Floatcraft",
         description:
           "Professioneller Tech-Support und PC-Hilfe in Berlin. Vor-Ort-Service für Computer-Reparatur, Netzwerk-Einrichtung und IT-Support von erfahrenen Informatikstudenten.",
         url: "https://www.studentenathome.de",

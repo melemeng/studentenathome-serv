@@ -46,7 +46,7 @@ export default function PrivacyPage() {
                 "wir", "uns", "unser") sind:
               </p>
               <p className="ml-4">
-                Studenten Helfen UG
+                Floatcraft UG
                 <br />
                 Peter-Vischer-Straße 8
                 <br />
@@ -301,7 +301,7 @@ export default function PrivacyPage() {
                 kontaktieren Sie uns:
               </p>
               <p className="ml-4">
-                <strong>Studenten Helfen UG</strong>
+                <strong>Floatcraft UG</strong>
                 <br />
                 Peter-Vischer-Straße 8
                 <br />
@@ -332,7 +332,7 @@ export default function PrivacyPage() {
 
         <Separator className="my-12" />
         <p className="text-xs text-muted-foreground text-center">
-          Letzte Aktualisierung: Dezember 2024
+          Letzte Aktualisierung: Januar 2026
         </p>
       </div>
     </div>

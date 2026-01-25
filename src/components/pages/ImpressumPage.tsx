@@ -245,7 +245,7 @@ export default function ImpressumPage() {
 
         <Separator className="my-12" />
         <p className="text-xs text-muted-foreground text-center">
-          Letzte Aktualisierung: Dezember 2024
+          Letzte Aktualisierung: Januar 2026
         </p>
       </div>
     </div>
