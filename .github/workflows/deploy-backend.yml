@@ -20,8 +20,7 @@ jobs:
         run: npm install -g @railway/cli
 
       - name: Deploy to Railway
-        run: |
-          cd server
-          RAILWAY_TOKEN="${{ secrets.RAILWAY_TOKEN }}" railway up -s "${{ secrets.RAILWAY_SERVICE_ID }}"
+        run: railway up --service studentenathome-serv --detach
+        working-directory: server
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
