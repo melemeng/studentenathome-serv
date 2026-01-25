@@ -33,9 +33,9 @@ export default function ImpressumPage() {
               </p>
               <p>Studenten Helfen UG</p>
               <p>
-                Musterstraße 123
+                Peter-Vischer-Straße 8
                 <br />
-                10115 Berlin
+                12157 Berlin
               </p>
               <p>
                 <strong>Telefon:</strong> +49 179 4104323
@@ -68,7 +68,7 @@ export default function ImpressumPage() {
             <div className="space-y-2 text-sm leading-relaxed">
               <p>
                 <strong>Eintrag im Handelsregister:</strong> Amtsgericht
-                Charlottenburg (Berlin)
+                Berlin-Charlottenburg
               </p>
               <p>
                 <strong>Registrierungsnummer:</strong> HRB [Nummer]

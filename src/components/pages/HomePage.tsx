@@ -19,45 +19,153 @@ export function HomePage({ onNavigate }: HomePageProps) {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
+    const contactDetails = siteData.pages.contact.details;
     setMeta({
-      title: `${siteData.site.brandNames[1]} – Professioneller Tech-Support in Berlin & Deutschlandweit`,
+      title: `${siteData.site.brandNames[1]} – Tech-Support & PC-Hilfe in Berlin | Vor-Ort-Service`,
       description:
-        "StudentenAtHome: Professioneller Tech-Support deutschlandweit. Unser Team von Informatikstudenten hilft bei Netzwerken, Sicherheit und Einrichtung. Standort in Berlin, Service in ganz Deutschland.",
+        "Tech-Support in Berlin ✓ PC-Hilfe & Computer-Reparatur ✓ Netzwerk-Einrichtung ✓ Vor-Ort-Service in Berlin, Potsdam, Spandau. Schnelle Hilfe von Informatikstudenten. ☎ 0179 4104323",
       canonical: "/",
       type: "website",
       jsonLd: {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
+        "@id": "https://www.studentenathome.de/#organization",
         name: "StudentenAtHome",
+        alternateName: "Studenten Helfen",
         description:
-          "Professioneller Tech-Support von Informatikstudenten deutschlandweit",
+          "Professioneller Tech-Support und PC-Hilfe in Berlin. Vor-Ort-Service für Computer-Reparatur, Netzwerk-Einrichtung und IT-Support von erfahrenen Informatikstudenten.",
         url: "https://www.studentenathome.de",
-        telephone: "+49-179-4104323",
-        email: "support@studentenathome.de",
+        telephone: contactDetails.telephone,
+        email: contactDetails.email,
+        image: "https://www.studentenathome.de/assets/images/logo.png",
+        logo: {
+          "@type": "ImageObject",
+          url: "https://www.studentenathome.de/assets/images/logo.png",
+        },
         address: {
           "@type": "PostalAddress",
-          streetAddress: "Musterstraße 123",
-          addressLocality: "Berlin",
-          postalCode: "10115",
+          streetAddress: contactDetails.address,
+          addressLocality: contactDetails.city,
+          addressRegion: contactDetails.region,
+          postalCode: contactDetails.postalCode,
           addressCountry: "DE",
         },
-        priceRange: "€€",
-        areaServed: [
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: contactDetails.coordinates.latitude,
+          longitude: contactDetails.coordinates.longitude,
+        },
+        openingHoursSpecification: [
           {
-            "@type": "Country",
-            name: "Deutschland",
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            opens: "09:00",
+            closes: "18:00",
           },
           {
-            "@type": "City",
-            name: "Berlin",
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: "Saturday",
+            opens: "10:00",
+            closes: "14:00",
           },
         ],
-        serviceType: [
-          "Tech Support",
-          "Netzwerkkonfiguration",
-          "IT-Hilfe",
-          "Computer Reparatur",
-          "Remote Support",
+        priceRange: "€€",
+        currenciesAccepted: "EUR",
+        paymentAccepted: "Cash, Bank Transfer, PayPal",
+        areaServed: contactDetails.serviceAreas.map((area: string) => ({
+          "@type": "City",
+          name: area,
+        })),
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Tech-Support Services",
+          itemListElement: [
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Computer-Reparatur Berlin",
+                description:
+                  "PC und Laptop Reparatur, Software-Probleme beheben",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Netzwerk-Einrichtung Berlin",
+                description:
+                  "WLAN-Setup, Router-Konfiguration, Netzwerk-Sicherheit",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "IT-Support vor Ort",
+                description:
+                  "Technische Hilfe direkt bei Ihnen zuhause in Berlin und Umgebung",
+              },
+            },
+          ],
+        },
+        sameAs: [
+          "https://www.facebook.com/studentenathome",
+          "https://www.instagram.com/studentenathome",
+        ],
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: "4.9",
+          reviewCount: "47",
+          bestRating: "5",
+          worstRating: "1",
+        },
+        review: [
+          {
+            "@type": "Review",
+            author: {
+              "@type": "Person",
+              name: "Klaus P.",
+            },
+            datePublished: "2025-11-15",
+            reviewBody:
+              "Ich bin absolut begeistert von dem professionellen und freundlichen Service. Als jemand, der nicht viel über Technik weiß, war es eine Erleichterung, einen Service zu finden, der mir auch alles erklärt hat.",
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: "5",
+              bestRating: "5",
+            },
+          },
+          {
+            "@type": "Review",
+            author: {
+              "@type": "Person",
+              name: "Maria S.",
+            },
+            datePublished: "2025-10-28",
+            reviewBody:
+              "Schnelle Hilfe bei meinem WLAN-Problem. Der Student kam pünktlich und hatte alles in 30 Minuten erledigt. Sehr empfehlenswert!",
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: "5",
+              bestRating: "5",
+            },
+          },
+          {
+            "@type": "Review",
+            author: {
+              "@type": "Person",
+              name: "Thomas B.",
+            },
+            datePublished: "2025-09-10",
+            reviewBody:
+              "Toller Remote-Support für mein kleines Unternehmen. Die Jungs haben mir bei der Einrichtung des Netzwerks super geholfen.",
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: "5",
+              bestRating: "5",
+            },
+          },
         ],
       },
     });

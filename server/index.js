@@ -838,7 +838,7 @@ Diese Nachricht wurde über das Kontaktformular auf studentenathome.de gesendet.
             <p style="margin: 0;"><strong>Kontakt:</strong></p>
             <p style="margin: 5px 0;">📧 support@studentenathome.de</p>
             <p style="margin: 5px 0;">📞 +49 179 4104323</p>
-            <p style="margin: 5px 0;">📍 Klingestraße 13C, 01159 Dresden</p>
+            <p style="margin: 5px 0;">📍 Peter-Vischer-Straße 8, 12157 Berlin</p>
           </div>
           
           <p>Mit freundlichen Grüßen,<br>Ihr StudentenAtHome Team</p>
@@ -865,7 +865,7 @@ In der Regel antworten wir innerhalb von 24 Stunden während der Geschäftszeite
 Kontakt:
 E-Mail: support@studentenathome.de
 Telefon: +49 179 4104323
-Adresse: Klingestraße 13C, 01159 Dresden
+Adresse: Peter-Vischer-Straße 8, 12157 Berlin
 
 Mit freundlichen Grüßen,
 Ihr StudentenAtHome Team
@@ -1354,9 +1354,7 @@ app.post("/api/jobs", apiLimiter, authenticateToken, async (req, res) => {
     }
 
     if (!job.type || !job.location) {
-      return res
-        .status(400)
-        .json({ error: "Type and location are required" });
+      return res.status(400).json({ error: "Type and location are required" });
     }
 
     if (!Array.isArray(job.requirements) || job.requirements.length === 0) {

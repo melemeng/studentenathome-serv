@@ -42,17 +42,62 @@ export function Footer({ onNavigate }: FooterProps) {
     }
   };
 
+  const contactDetails = siteData.pages.contact.details;
+
   return (
     <footer className="bg-secondary/30 border-t border-border">
       <div className="container mx-auto max-w-7xl px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <h3 className="font-bold text-lg mb-4 text-primary">
-              {siteData.site.brandNames[1]}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-8">
+          {/* NAP - Critical for Local SEO */}
+          <div
+            className="md:col-span-2"
+            itemScope
+            itemType="https://schema.org/LocalBusiness"
+          >
+            <h3 className="font-bold text-lg mb-4 text-primary" itemProp="name">
+              {contactDetails.businessName}
             </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Professioneller Tech-Support von Informatikstudenten direkt zu
-              Ihnen nach Hause.
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              Tech-Support & PC-Hilfe in Berlin. Vor-Ort-Service von
+              Informatikstudenten.
+            </p>
+
+            {/* Address - NAP Component */}
+            <address
+              className="text-sm text-muted-foreground not-italic mb-3"
+              itemProp="address"
+              itemScope
+              itemType="https://schema.org/PostalAddress"
+            >
+              <span itemProp="streetAddress">{contactDetails.address}</span>
+              <br />
+              <span itemProp="postalCode">
+                {contactDetails.postalCode}
+              </span>{" "}
+              <span itemProp="addressLocality">{contactDetails.city}</span>
+            </address>
+
+            {/* Phone - NAP Component */}
+            <a
+              href={contactDetails.telephoneLink}
+              className="text-sm text-accent hover:underline block mb-2"
+              itemProp="telephone"
+            >
+              📞 {contactDetails.telephoneDisplay}
+            </a>
+
+            {/* Email */}
+            <a
+              href={contactDetails.emailLink}
+              className="text-sm text-accent hover:underline block"
+              itemProp="email"
+            >
+              ✉️ {contactDetails.email}
+            </a>
+
+            {/* Service Areas for Local SEO */}
+            <p className="text-xs text-muted-foreground mt-4">
+              Service in: {contactDetails.serviceAreas.slice(0, 5).join(", ")}
             </p>
           </div>
 

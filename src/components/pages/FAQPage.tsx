@@ -8,105 +8,125 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+// FAQs defined outside component for schema access
+const faqs = [
+  {
+    id: "faq-1",
+    question: "Wie buche ich einen Termin?",
+    answer:
+      "Sie können uns ganz einfach über unser Kontaktformular, per E-Mail (support@studentenathome.de) oder telefonisch unter +49 179 4104323 erreichen. Schildern Sie uns Ihr Problem, und wir machen Ihnen einen Terminvorschlag.",
+  },
+  {
+    id: "faq-2",
+    question: "Welche Gebiete decken Sie ab?",
+    answer:
+      "Wir bieten Vor-Ort-Service in Berlin und Umgebung (Potsdam, Spandau, Köpenick, Charlottenburg, Prenzlauer Berg, Kreuzberg). Remote-Support bieten wir deutschlandweit an. Für Vor-Ort-Termine außerhalb Berlins berechnen wir gegebenenfalls eine Anfahrtspauschale.",
+  },
+  {
+    id: "faq-3",
+    question: "Welche Betriebssysteme unterstützen Sie?",
+    answer:
+      "Wir unterstützen Windows, macOS und Linux. Unser Team hat Erfahrung mit allen gängigen Betriebssystemen und kann Sie bei Fragen zu Ihrem System unterstützen.",
+  },
+  {
+    id: "faq-4",
+    question: "Was kostet eine Stunde Support?",
+    answer:
+      "Unser Einsteigerpaket kostet 30 € für 30 Minuten. Für komplexere Projekte und Unternehmenslösungen bieten wir individuelle Preise. Kontaktieren Sie uns für ein unverbindliches Angebot.",
+  },
+  {
+    id: "faq-5",
+    question: "Wie lange dauert es, bis ich einen Termin bekomme?",
+    answer:
+      "Wir versuchen, zeitnah auf Ihre Anfrage zu reagieren. Je nach Aktualität unseres Kalenders können wir oft innerhalb von 24-48 Stunden einen Termin anbieten. Dringende Fälle behandeln wir bevorzugt.",
+  },
+  {
+    id: "faq-6",
+    question: "Bieten Sie auch Remote-Support an?",
+    answer:
+      "Ja, für viele Probleme können wir auch Remote-Support anbieten. Dies ist oft schneller und für Sie kostengünstiger. Unsere Mitarbeiter werden Ihnen alles Schritt für Schritt erklären.",
+  },
+  {
+    id: "faq-7",
+    question:
+      "Kann ich auch einfach eine Frage stellen, ohne einen Termin zu buchen?",
+    answer:
+      "Gerne können Sie uns per E-Mail oder Telefon kontaktieren und uns kurz Ihre Frage schildern. Für einfache Probleme können wir Ihnen oft direkt helfen. Für komplexere Aufgaben vereinbaren wir einen Termin.",
+  },
+  {
+    id: "faq-8",
+    question: "Seid ihr auch am Wochenende erreichbar?",
+    answer:
+      "Unsere Standard-Öffnungszeiten sind Mo.–Fr. 10:00–18:00 Uhr. Für dringende Fälle am Wochenende können Sie uns anrufen und nachfragen, ob eine schnelle Lösung möglich ist.",
+  },
+  {
+    id: "faq-9",
+    question: "Was ist mit meinen Daten – sind sie sicher?",
+    answer:
+      "Ihre Daten und Privatsphäre sind uns sehr wichtig. Wir halten uns streng an die DSGVO und andere Datenschutzbestimmungen. Näheres finden Sie in unserer Datenschutzerklärung.",
+  },
+  {
+    id: "faq-10",
+    question: "Kann ich meine IT-Infrastruktur optimieren lassen?",
+    answer:
+      "Absolut! Wir bieten Beratung und Optimierung für Ihr Netzwerk, Ihre Geräte und IT-Systeme an. Dies ist besonders für Unternehmen interessant. Sprechen Sie uns an für ein individuelles Angebot.",
+  },
+  {
+    id: "faq-11",
+    question: "Habt ihr Erfahrung mit Druckern und Netzwerkgeräten?",
+    answer:
+      "Ja, die Einrichtung und Konfiguration von Druckern, Scannern und anderen Netzwerkgeräten gehört zu unseren Standard-Dienstleistungen. Wir helfen Ihnen, alle Geräte richtig einzurichten.",
+  },
+  {
+    id: "faq-12",
+    question: "Kann ich mit StudentenAtHome einen Wartungsvertrag abschließen?",
+    answer:
+      "Ja, für Unternehmen und anspruchsvollere Kunden bieten wir maßgeschneiderte Wartungs- und Support-Verträge an. Kontaktieren Sie uns, um Details zu besprechen.",
+  },
+];
+
 export default function FAQPage() {
   useEffect(() => {
     setMeta({
-      title: `FAQ | StudentenAtHome`,
+      title: `FAQ - Häufige Fragen | Tech-Support Berlin | StudentenAtHome`,
       description:
-        "Häufig gestellte Fragen zu unseren Services, Preisen und Support-Abläufen bei StudentenAtHome.",
+        "Häufig gestellte Fragen zu Tech-Support in Berlin: Preise, Service-Gebiete, Terminbuchung, Remote-Support. Alle Antworten zu StudentenAtHome.",
       canonical: "/faq",
       type: "website",
-      jsonLd: {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: faqs.map((faq) => ({
-          "@type": "Question",
-          name: faq.question,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: faq.answer,
-          },
-        })),
-      },
+      jsonLd: [
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: faq.answer,
+            },
+          })),
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Home",
+              item: "https://www.studentenathome.de/",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "FAQ",
+              item: "https://www.studentenathome.de/faq",
+            },
+          ],
+        },
+      ],
     });
   }, []);
-
-  const faqs = [
-    {
-      id: "faq-1",
-      question: "Wie buche ich einen Termin?",
-      answer:
-        "Sie können uns ganz einfach über unser Kontaktformular, per E-Mail (support@studentenathome.de) oder telefonisch unter +49 179 4104323 erreichen. Schildern Sie uns Ihr Problem, und wir machen Ihnen einen Terminvorschlag.",
-    },
-    {
-      id: "faq-2",
-      question: "Welche Gebiete decken Sie ab?",
-      answer:
-        "Wir sind deutschlandweit tätig und bieten sowohl Vor-Ort-Service als auch Remote-Support an. Unser Hauptsitz ist in Berlin. Für Vor-Ort-Termine außerhalb Berlins berechnen wir gegebenenfalls eine Anfahrtspauschale. Kontaktieren Sie uns gerne, um zu klären, wie wir Sie am besten unterstützen können.",
-    },
-    {
-      id: "faq-3",
-      question: "Welche Betriebssysteme unterstützen Sie?",
-      answer:
-        "Wir unterstützen Windows, macOS und Linux. Unser Team hat Erfahrung mit allen gängigen Betriebssystemen und kann Sie bei Fragen zu Ihrem System unterstützen.",
-    },
-    {
-      id: "faq-4",
-      question: "Was kostet eine Stunde Support?",
-      answer:
-        "Unser Einsteigerpaket kostet 30 € für 30 Minuten. Für komplexere Projekte und Unternehmenslösungen bieten wir individuelle Preise. Kontaktieren Sie uns für ein unverbindliches Angebot.",
-    },
-    {
-      id: "faq-5",
-      question: "Wie lange dauert es, bis ich einen Termin bekomme?",
-      answer:
-        "Wir versuchen, zeitnah auf Ihre Anfrage zu reagieren. Je nach Aktualität unseres Kalenders können wir oft innerhalb von 24-48 Stunden einen Termin anbieten. Dringende Fälle behandeln wir bevorzugt.",
-    },
-    {
-      id: "faq-6",
-      question: "Bieten Sie auch Remote-Support an?",
-      answer:
-        "Ja, für viele Probleme können wir auch Remote-Support anbieten. Dies ist oft schneller und für Sie kostengünstiger. Unsere Mitarbeiter werden Ihnen alles Schritt für Schritt erklären.",
-    },
-    {
-      id: "faq-7",
-      question:
-        "Kann ich auch einfach eine Frage stellen, ohne einen Termin zu buchen?",
-      answer:
-        "Gerne können Sie uns per E-Mail oder Telefon kontaktieren und uns kurz Ihre Frage schildern. Für einfache Probleme können wir Ihnen oft direkt helfen. Für komplexere Aufgaben vereinbaren wir einen Termin.",
-    },
-    {
-      id: "faq-8",
-      question: "Seid ihr auch am Wochenende erreichbar?",
-      answer:
-        "Unsere Standard-Öffnungszeiten sind Mo.–Fr. 10:00–18:00 Uhr. Für dringende Fälle am Wochenende können Sie uns anrufen und nachfragen, ob eine schnelle Lösung möglich ist.",
-    },
-    {
-      id: "faq-9",
-      question: "Was ist mit meinen Daten – sind sie sicher?",
-      answer:
-        "Ihre Daten und Privatsphäre sind uns sehr wichtig. Wir halten uns streng an die DSGVO und andere Datenschutzbestimmungen. Näheres finden Sie in unserer Datenschutzerklärung.",
-    },
-    {
-      id: "faq-10",
-      question: "Kann ich meine IT-Infrastruktur optimieren lassen?",
-      answer:
-        "Absolut! Wir bieten Beratung und Optimierung für Ihr Netzwerk, Ihre Geräte und IT-Systeme an. Dies ist besonders für Unternehmen interessant. Sprechen Sie uns an für ein individuelles Angebot.",
-    },
-    {
-      id: "faq-11",
-      question: "Habt ihr Erfahrung mit Druckern und Netzwerkgeräten?",
-      answer:
-        "Ja, die Einrichtung und Konfiguration von Druckern, Scannern und anderen Netzwerkgeräten gehört zu unseren Standard-Dienstleistungen. Wir helfen Ihnen, alle Geräte richtig einzurichten.",
-    },
-    {
-      id: "faq-12",
-      question:
-        "Kann ich mit StudentenAtHome einen Wartungsvertrag abschließen?",
-      answer:
-        "Ja, für Unternehmen und anspruchsvollere Kunden bieten wir maßgeschneiderte Wartungs- und Support-Verträge an. Kontaktieren Sie uns, um Details zu besprechen.",
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">

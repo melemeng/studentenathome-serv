@@ -22,13 +22,47 @@ export default function SolutionsPage({ onNavigate }: SolutionsPageProps) {
   };
 
   useEffect(() => {
+    const contactDetails = siteData.pages.contact.details;
     setMeta({
-      title: `${title} | ${siteData.site.brandNames[1]}`,
-      description: intro,
+      title: `Tech-Support & PC-Hilfe Services Berlin | ${siteData.site.brandNames[1]}`,
+      description: `IT-Services in Berlin: Computer-Reparatur ✓ Netzwerk-Einrichtung ✓ Drucker-Setup ✓ Vor-Ort-Service ab 30€/30min. ☎ ${contactDetails.telephoneDisplay}`,
       canonical: "/solutions",
       type: "website",
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        serviceType: "IT-Support und Computer-Reparatur",
+        provider: {
+          "@type": "LocalBusiness",
+          "@id": "https://www.studentenathome.de/#organization",
+          name: "StudentenAtHome",
+          telephone: contactDetails.telephone,
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: contactDetails.city,
+            addressRegion: contactDetails.region,
+            addressCountry: "DE",
+          },
+        },
+        areaServed: contactDetails.serviceAreas.map((area: string) => ({
+          "@type": "City",
+          name: area,
+        })),
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Tech-Support Services in Berlin",
+          itemListElement: services.map((service) => ({
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: service.title,
+              description: service.description,
+            },
+          })),
+        },
+      },
     });
-  }, [title, intro]);
+  }, [title, intro, services]);
 
   return (
     <div className="min-h-screen">
@@ -40,10 +74,10 @@ export default function SolutionsPage({ onNavigate }: SolutionsPageProps) {
             className="max-w-3xl mx-auto text-center mb-16"
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-              {title}
+              Tech-Support Services in Berlin
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              {intro}
+              {intro} Vor-Ort-Service in Berlin, Potsdam, Spandau und Umgebung.
             </p>
           </motion.div>
 

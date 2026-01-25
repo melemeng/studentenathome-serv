@@ -118,14 +118,62 @@ export default function ContactPage() {
 
   useEffect(() => {
     setMeta({
-      title: `${title} | ${siteData.site.brandNames[1]}`,
-      description: ctaIntro,
+      title: `Kontakt - Tech-Support Berlin | ${siteData.site.brandNames[1]}`,
+      description: `Kontaktieren Sie StudentenAtHome für Tech-Support in Berlin. ☎ ${details.telephoneDisplay} ✉ ${details.email} 📍 ${details.fullAddress}. Schnelle Hilfe bei PC-Problemen.`,
       canonical: "/contact",
       type: "website",
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        mainEntity: {
+          "@type": "LocalBusiness",
+          "@id": "https://www.studentenathome.de/#organization",
+          name: details.businessName,
+          telephone: details.telephone,
+          email: details.email,
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: details.address,
+            addressLocality: details.city,
+            addressRegion: details.region,
+            postalCode: details.postalCode,
+            addressCountry: "DE",
+          },
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: details.coordinates.latitude,
+            longitude: details.coordinates.longitude,
+          },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+              ],
+              opens: "09:00",
+              closes: "18:00",
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: "Saturday",
+              opens: "10:00",
+              closes: "14:00",
+            },
+          ],
+          areaServed: details.serviceAreas.map((area: string) => ({
+            "@type": "City",
+            name: area,
+          })),
+        },
+      },
     });
     // Fetch CSRF token for contact form
     refreshCsrfToken();
-  }, [title, ctaIntro]);
+  }, [title, ctaIntro, details]);
 
   return (
     <div className="min-h-screen">
@@ -137,7 +185,7 @@ export default function ContactPage() {
             className="max-w-3xl mx-auto text-center mb-16"
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-              {title}
+              Tech-Support in Berlin kontaktieren
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
               {ctaIntro}
@@ -173,9 +221,11 @@ export default function ContactPage() {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
+              itemScope
+              itemType="https://schema.org/LocalBusiness"
             >
               <h2 className="text-3xl font-bold mb-8 text-foreground">
-                Kontaktinformationen
+                Kontakt in Berlin
               </h2>
 
               <div className="space-y-6">
@@ -183,11 +233,22 @@ export default function ContactPage() {
                   <div className="flex-shrink-0 w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
                     <MapPin className="h-6 w-6 text-accent" weight="fill" />
                   </div>
-                  <div>
+                  <div
+                    itemProp="address"
+                    itemScope
+                    itemType="https://schema.org/PostalAddress"
+                  >
                     <h3 className="font-semibold text-foreground mb-1">
                       Adresse
                     </h3>
-                    <p className="text-muted-foreground">{details.address}</p>
+                    <p className="text-muted-foreground">
+                      <span itemProp="streetAddress">{details.address}</span>
+                      <br />
+                      <span itemProp="postalCode">
+                        {details.postalCode}
+                      </span>{" "}
+                      <span itemProp="addressLocality">{details.city}</span>
+                    </p>
                   </div>
                 </div>
 
@@ -202,8 +263,9 @@ export default function ContactPage() {
                     <a
                       href={details.telephoneLink}
                       className="text-accent hover:underline"
+                      itemProp="telephone"
                     >
-                      {details.telephone}
+                      {details.telephoneDisplay}
                     </a>
                   </div>
                 </div>
@@ -219,10 +281,40 @@ export default function ContactPage() {
                     <a
                       href={details.emailLink}
                       className="text-accent hover:underline"
+                      itemProp="email"
                     >
                       {details.email}
                     </a>
                   </div>
+                </div>
+
+                {/* Opening Hours */}
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                    <span className="text-accent text-xl">🕐</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-1">
+                      Öffnungszeiten
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      {details.openingHours.weekdays}
+                      <br />
+                      {details.openingHours.saturday}
+                      <br />
+                      {details.openingHours.sunday}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Service Areas */}
+                <div className="mt-6 p-4 bg-accent/5 rounded-lg">
+                  <h3 className="font-semibold text-foreground mb-2">
+                    🚗 Vor-Ort-Service in:
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    {details.serviceAreas.join(" • ")}
+                  </p>
                 </div>
               </div>
             </motion.div>

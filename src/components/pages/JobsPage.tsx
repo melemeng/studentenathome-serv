@@ -26,7 +26,7 @@ const staticJobListings: JobListing[] = [
     id: "1",
     title: "Junior Tech Support Specialist",
     type: "Vollzeit / Teilzeit",
-    location: "Berlin / Deutschlandweit / Remote",
+    location: "Berlin / Brandenburg / Remote",
     description:
       "Wir suchen engagierte Informatikstudenten und Absolventen, die unseren Kunden helfen möchten. Bieten Sie technische Unterstützung vor Ort und remote an, lösen Sie Probleme und unterstützen Sie private und geschäftliche Kunden.",
     requirements: [
@@ -48,7 +48,7 @@ const staticJobListings: JobListing[] = [
     id: "2",
     title: "Netzwerk-Administrator / Konfigurateur",
     type: "Vollzeit / Teilzeit",
-    location: "Berlin / Deutschlandweit / Remote",
+    location: "Berlin / Brandenburg / Remote",
     description:
       "Gesucht: Studenten mit Fachwissen in Netzwerktechnik und Systemkonfiguration. Sie bauen Netzwerke auf, konfigurieren diese und stellen sicher, dass unsere Kunden optimal vernetzt sind.",
     requirements: [
@@ -70,7 +70,7 @@ const staticJobListings: JobListing[] = [
     id: "3",
     title: "IT-Support Trainer / Schulung",
     type: "Teilzeit",
-    location: "Berlin / Deutschlandweit / Remote",
+    location: "Berlin / Brandenburg / Remote",
     description:
       "Du hast Freude daran, andere auszubilden? Wir suchen jemanden, der unsere Support-Mitarbeiter schulen und trainieren kann sowie Kunden in ihren Geräten unterweisen kann.",
     requirements: [
@@ -114,7 +114,7 @@ const staticJobListings: JobListing[] = [
     id: "5",
     title: "Kundenbetreuung / Support-Koordinator",
     type: "Vollzeit / Teilzeit",
-    location: "Berlin / Deutschlandweit / Remote",
+    location: "Berlin / Brandenburg / Remote",
     description:
       "Du bist kommunikativ und organisiert? Verwalte Kundenanfragen, koordiniere Support-Einsätze, terminiere Termine und stelle sicher, dass unsere Kunden zufrieden sind.",
     requirements: [
@@ -144,9 +144,9 @@ export default function JobsPage() {
 
   useEffect(() => {
     setMeta({
-      title: `Karriere | StudentenAtHome`,
+      title: `Karriere - Jobs bei StudentenAtHome in Berlin`,
       description:
-        "Offene Positionen und Vorteile einer Mitarbeit bei StudentenAtHome. Werde Teil unseres Teams in Berlin, deutschlandweit oder remote.",
+        "Stellenangebote bei StudentenAtHome in Berlin. Werde Teil unseres Tech-Support Teams. Flexible Arbeitszeiten für Studenten, Vor-Ort in Berlin/Brandenburg oder Remote.",
       canonical: "https://www.studentenathome.de/jobs",
     });
 
@@ -154,22 +154,24 @@ export default function JobsPage() {
     const fetchJobs = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/jobs`);
-        
+
         if (!response.ok) {
           throw new Error("Failed to fetch jobs from API");
         }
 
         const data: JobListing[] = await response.json();
-        
+
         // Parse JSONB fields if they are strings
         const parsedJobs = data.map((job) => ({
           ...job,
-          requirements: typeof job.requirements === 'string' 
-            ? JSON.parse(job.requirements) 
-            : job.requirements,
-          benefits: typeof job.benefits === 'string' 
-            ? JSON.parse(job.benefits) 
-            : job.benefits,
+          requirements:
+            typeof job.requirements === "string"
+              ? JSON.parse(job.requirements)
+              : job.requirements,
+          benefits:
+            typeof job.benefits === "string"
+              ? JSON.parse(job.benefits)
+              : job.benefits,
         }));
 
         setJobListings(parsedJobs);
@@ -255,7 +257,7 @@ export default function JobsPage() {
                   Vor-Ort oder Remote
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Wähle zwischen Vor-Ort-Support in Berlin oder
+                  Wähle zwischen Vor-Ort-Support in Berlin und Umgebung oder
                   Remote-Tätigkeit deutschlandweit, wie es dir passt.
                 </p>
               </div>

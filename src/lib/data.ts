@@ -166,10 +166,10 @@ export const siteData = {
         {
           title: "Wer wir sind",
           content: [
-            "Unser Team besteht aus motivierten und freundlichen Studenten, die nicht nur technische Probleme lösen, sondern auch ein offenes Ohr für Ihre Fragen haben.",
+            "Unser Team besteht aus motivierten und freundlichen Informatikstudenten aus Berlin, die nicht nur technische Probleme lösen, sondern auch ein offenes Ohr für Ihre Fragen haben.",
             "StudentenAtHome wurde aus der Idee heraus geboren, Technik-Support für alle zugänglich und verständlich zu machen.",
-            "Seit unserer Gründung haben wir zahlreiche Kunden in Berlin und deutschlandweit unterstützt und dabei geholfen, ihre technischen Herausforderungen zu meistern.",
-            "Durch unsere flexible und individuelle Herangehensweise haben wir uns einen Namen als zuverlässiger Partner in allen Technikfragen gemacht.",
+            "Seit unserer Gründung haben wir zahlreiche Kunden in Berlin und Umgebung – Potsdam, Spandau, Köpenick und ganz Brandenburg – unterstützt und dabei geholfen, ihre technischen Herausforderungen zu meistern.",
+            "Durch unsere flexible und individuelle Herangehensweise haben wir uns einen Namen als zuverlässiger Partner für Tech-Support in Berlin gemacht.",
           ],
         },
         {
@@ -221,11 +221,37 @@ export const siteData = {
       ctaIntro:
         "Kontaktieren Sie uns – schildern Sie kurz Ihr Problem, wir melden uns mit einem Lösungsvorschlag.",
       details: {
-        address: "Musterstraße 123, 10115 Berlin",
+        businessName: "StudentenAtHome",
+        address: "Peter-Vischer-Straße 8",
+        postalCode: "12157",
+        city: "Berlin",
+        fullAddress: "Peter-Vischer-Straße 8, 12157 Berlin",
+        region: "Berlin",
+        country: "Deutschland",
         telephone: "+49 179 4104323",
+        telephoneDisplay: "0179 4104323",
         telephoneLink: "tel:+491794104323",
         email: "support@studentenathome.de",
         emailLink: "mailto:support@studentenathome.de",
+        coordinates: {
+          latitude: 52.52,
+          longitude: 13.405,
+        },
+        openingHours: {
+          weekdays: "Mo-Fr 09:00-18:00",
+          saturday: "Sa 10:00-14:00",
+          sunday: "So geschlossen",
+        },
+        serviceAreas: [
+          "Berlin",
+          "Potsdam",
+          "Spandau",
+          "Köpenick",
+          "Charlottenburg",
+          "Prenzlauer Berg",
+          "Kreuzberg",
+          "Brandenburg",
+        ],
       },
       form: {
         fields: [

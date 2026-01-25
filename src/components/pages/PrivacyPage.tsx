@@ -48,9 +48,9 @@ export default function PrivacyPage() {
               <p className="ml-4">
                 Studenten Helfen UG
                 <br />
-                Musterstraße 123
+                Peter-Vischer-Straße 8
                 <br />
-                10115 Berlin
+                12157 Berlin
                 <br />
                 E-Mail: support@studentenathome.de
                 <br />
@@ -303,9 +303,9 @@ export default function PrivacyPage() {
               <p className="ml-4">
                 <strong>Studenten Helfen UG</strong>
                 <br />
-                Klingestrasse 13C
+                Peter-Vischer-Straße 8
                 <br />
-                01159 Dresden
+                12157 Berlin
                 <br />
                 E-Mail: support@studentenathome.de
                 <br />

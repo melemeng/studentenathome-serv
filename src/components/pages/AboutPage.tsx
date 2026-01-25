@@ -23,11 +23,36 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
   };
 
   useEffect(() => {
+    const contactDetails = siteData.pages.contact.details;
     setMeta({
-      title: `${sections[0].title} | ${siteData.site.brandNames[1]}`,
-      description: sections[0].content?.[0] || "Über StudentenAtHome",
+      title: `Über uns - Tech-Support Team Berlin | ${siteData.site.brandNames[1]}`,
+      description: `Lernen Sie unser Team von Informatikstudenten in Berlin kennen. Professioneller Tech-Support & PC-Hilfe seit 2020. Vor-Ort-Service in ${contactDetails.serviceAreas
+        .slice(0, 4)
+        .join(", ")}.`,
       canonical: "/about",
       type: "website",
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        mainEntity: {
+          "@type": "LocalBusiness",
+          "@id": "https://www.studentenathome.de/#organization",
+          name: "StudentenAtHome",
+          description:
+            "Team von Informatikstudenten für professionellen Tech-Support in Berlin",
+          foundingDate: "2020",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: contactDetails.city,
+            addressRegion: contactDetails.region,
+            addressCountry: "DE",
+          },
+          areaServed: contactDetails.serviceAreas.map((area: string) => ({
+            "@type": "City",
+            name: area,
+          })),
+        },
+      },
     });
   }, [sections]);
 
