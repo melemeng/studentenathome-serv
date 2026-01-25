@@ -28,7 +28,7 @@ export const siteData = {
       { platform: "YouTube", link: "" },
     ],
     footer: {
-      copyright: "© 2020 Floatcraft UG. All rights reserved.",
+      copyright: "© 2020-2026 Floatcraft UG. All rights reserved.",
     },
   },
   pages: {
