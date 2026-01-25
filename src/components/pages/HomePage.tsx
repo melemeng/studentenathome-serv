@@ -113,60 +113,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
           "https://www.facebook.com/studentenathome",
           "https://www.instagram.com/studentenathome",
         ],
-        aggregateRating: {
-          "@type": "AggregateRating",
-          ratingValue: "4.9",
-          reviewCount: "47",
-          bestRating: "5",
-          worstRating: "1",
-        },
-        review: [
-          {
-            "@type": "Review",
-            author: {
-              "@type": "Person",
-              name: "Klaus P.",
-            },
-            datePublished: "2025-11-15",
-            reviewBody:
-              "Ich bin absolut begeistert von dem professionellen und freundlichen Service. Als jemand, der nicht viel über Technik weiß, war es eine Erleichterung, einen Service zu finden, der mir auch alles erklärt hat.",
-            reviewRating: {
-              "@type": "Rating",
-              ratingValue: "5",
-              bestRating: "5",
-            },
-          },
-          {
-            "@type": "Review",
-            author: {
-              "@type": "Person",
-              name: "Maria S.",
-            },
-            datePublished: "2025-10-28",
-            reviewBody:
-              "Schnelle Hilfe bei meinem WLAN-Problem. Der Student kam pünktlich und hatte alles in 30 Minuten erledigt. Sehr empfehlenswert!",
-            reviewRating: {
-              "@type": "Rating",
-              ratingValue: "5",
-              bestRating: "5",
-            },
-          },
-          {
-            "@type": "Review",
-            author: {
-              "@type": "Person",
-              name: "Thomas B.",
-            },
-            datePublished: "2025-09-10",
-            reviewBody:
-              "Toller Remote-Support für mein kleines Unternehmen. Die Jungs haben mir bei der Einrichtung des Netzwerks super geholfen.",
-            reviewRating: {
-              "@type": "Rating",
-              ratingValue: "5",
-              bestRating: "5",
-            },
-          },
-        ],
       },
     });
   }, []);
