@@ -24,7 +24,7 @@ export default function MobileDeviceSetupPage({ onNavigate }: MobileDeviceSetupP
     setMeta({
       title: `Handy & Tablet Einrichtung Berlin | ${siteData.site.brandNames[1]}`,
       description: `Professionelle Handy & Tablet Einrichtung in Berlin ✓ iPhone & Android ✓ iPad Setup ✓ Datenübertragung ☎ ${contactDetails.telephoneDisplay}`,
-      canonical: "/services/geraete/handy-tablet-einrichtung",
+      canonical: "/services/geraete/handy-tablet",
       type: "service",
       jsonLd: {
         "@context": "https://schema.org",

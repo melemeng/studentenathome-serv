@@ -24,7 +24,7 @@ export default function BackupServicePage({ onNavigate }: BackupServicePageProps
     setMeta({
       title: `Backup Service & Datensicherung Berlin | ${siteData.site.brandNames[1]}`,
       description: `Professioneller Backup Service in Berlin ✓ Automatische Datensicherung ✓ Cloud & Lokal ✓ Datenrettung ☎ ${contactDetails.telephoneDisplay}`,
-      canonical: "/services/sonstiges/backup-service",
+      canonical: "/services/backup-service",
       type: "service",
       jsonLd: {
         "@context": "https://schema.org",

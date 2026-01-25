@@ -24,7 +24,7 @@ export default function BusinessAutomationPage({ onNavigate }: BusinessAutomatio
     setMeta({
       title: `Automatisierung Geschäftsprozesse Berlin | ${siteData.site.brandNames[1]}`,
       description: `Geschäftsprozesse automatisieren in Berlin ✓ Workflow-Automation ✓ Zeit sparen ✓ Effizienz steigern ☎ ${contactDetails.telephoneDisplay}`,
-      canonical: "/services/sonstiges/business-automation",
+      canonical: "/services/business-automation",
       type: "service",
       jsonLd: {
         "@context": "https://schema.org",

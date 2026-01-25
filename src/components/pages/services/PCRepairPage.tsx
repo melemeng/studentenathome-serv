@@ -24,7 +24,7 @@ export default function PCRepairPage({ onNavigate }: PCRepairPageProps) {
     setMeta({
       title: `PC Reparatur & Hardware Upgrades Berlin | ${siteData.site.brandNames[1]}`,
       description: `PC Reparatur & Hardware Upgrades in Berlin ✓ RAM & SSD Einbau ✓ Grafikkarten-Upgrade ✓ Diagnose & Reparatur ☎ ${contactDetails.telephoneDisplay}`,
-      canonical: "/services/sonstiges/pc-reparatur",
+      canonical: "/services/pc-reparatur",
       type: "service",
       jsonLd: {
         "@context": "https://schema.org",
