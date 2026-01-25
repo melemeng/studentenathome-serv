@@ -1,6 +1,6 @@
 export const siteData = {
   site: {
-    brandNames: ["Studenten Helfen", "StudentenAtHome"],
+    brandNames: ["Floatcraft", "StudentenAtHome"],
     navigation: [
       { title: "Home", link: "#" },
       { title: "Lösungen", link: "#" },
@@ -28,7 +28,7 @@ export const siteData = {
       { platform: "YouTube", link: "" },
     ],
     footer: {
-      copyright: "© 2020 Studenten Helfen, Inc. All rights reserved.",
+      copyright: "© 2020 Floatcraft UG. All rights reserved.",
     },
   },
   pages: {
