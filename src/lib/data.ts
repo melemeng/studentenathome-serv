@@ -129,6 +129,134 @@ export const siteData = {
             "Schulungen, damit Sie Ihre Geräte optimal nutzen und schützen.",
         },
       ],
+      categories: {
+        networkConfiguration: {
+          title: "Netzwerkkonfiguration",
+          route: "/services/netzwerk",
+          subcategories: [
+            {
+              id: "wlan-router",
+              title: "WLAN Router Einrichtung",
+              route: "/services/netzwerk/wlan-router",
+              description:
+                "Professionelle Einrichtung und Konfiguration Ihres WLAN-Routers für optimale Leistung und Sicherheit.",
+              icon: "WifiHigh",
+            },
+            {
+              id: "mesh",
+              title: "Mesh Installation",
+              route: "/services/netzwerk/mesh",
+              description:
+                "Installation eines Mesh-WLAN-Systems für nahtlose Netzabdeckung in Ihrem gesamten Zuhause oder Büro.",
+              icon: "Graph",
+            },
+            {
+              id: "lan-verlegung",
+              title: "LAN-Verlegung",
+              route: "/services/netzwerk/lan-verlegung",
+              description:
+                "Professionelle Verlegung von Netzwerkkabeln für stabile und schnelle Internetverbindungen.",
+              icon: "Cable",
+            },
+            {
+              id: "access-point",
+              title: "Access Point Installation",
+              route: "/services/netzwerk/access-point",
+              description:
+                "Installation und Konfiguration von Access Points für erweiterte WLAN-Abdeckung.",
+              icon: "Broadcast",
+            },
+            {
+              id: "powerline",
+              title: "Powerline Einrichten",
+              route: "/services/netzwerk/powerline",
+              description:
+                "Einrichtung von Powerline-Adaptern für Internet über die Stromleitung.",
+              icon: "Lightning",
+            },
+            {
+              id: "wlan-probleme",
+              title: "WLAN & Internet Probleme",
+              route: "/services/netzwerk/wlan-probleme",
+              description:
+                "Diagnose und Lösung von WLAN- und Internetverbindungsproblemen.",
+              icon: "Warning",
+            },
+          ],
+        },
+        deviceSetup: {
+          title: "Geräte Einrichten",
+          route: "/services/geraete",
+          subcategories: [
+            {
+              id: "computer-setup",
+              title: "Computer & Laptop Einrichten Lassen",
+              route: "/services/geraete/computer-setup",
+              description:
+                "Vollständige Einrichtung Ihres neuen Computers oder Laptops mit allen wichtigen Programmen und Einstellungen.",
+              icon: "Desktop",
+            },
+            {
+              id: "driver-installation",
+              title: "Treiber & Software Installation",
+              route: "/services/geraete/treiber-installation",
+              description:
+                "Installation und Aktualisierung von Treibern und Software für optimale Geräteleistung.",
+              icon: "Download",
+            },
+            {
+              id: "performance-optimization",
+              title: "PC Beschleunigen & Performance Optimierung",
+              route: "/services/geraete/performance-optimierung",
+              description:
+                "Optimierung Ihres PCs für bessere Geschwindigkeit und Leistung.",
+              icon: "Lightning",
+            },
+            {
+              id: "printer-installation",
+              title: "Drucker Installation",
+              route: "/services/geraete/drucker-installation",
+              description:
+                "Professionelle Installation und Konfiguration Ihres Druckers im Netzwerk.",
+              icon: "Printer",
+            },
+            {
+              id: "mobile-device-setup",
+              title: "Handy und Tablet Einrichtung",
+              route: "/services/geraete/handy-tablet",
+              description:
+                "Einrichtung und Konfiguration Ihrer mobilen Geräte mit Apps und Konten.",
+              icon: "DeviceMobile",
+            },
+          ],
+        },
+        standalone: [
+          {
+            id: "pc-repair",
+            title: "PC Reparatur & Hardware Upgrades",
+            route: "/services/pc-reparatur",
+            description:
+              "Professionelle PC-Reparatur und Hardware-Upgrades für bessere Leistung.",
+            icon: "Wrench",
+          },
+          {
+            id: "backup-service",
+            title: "Backup Service",
+            route: "/services/backup-service",
+            description:
+              "Sichere Datensicherung und Wiederherstellung für Ihre wichtigen Daten.",
+            icon: "CloudArrowUp",
+          },
+          {
+            id: "business-automation",
+            title: "Automatisierung Geschäftsprozesse",
+            route: "/services/business-automation",
+            description:
+              "Automatisierung Ihrer Geschäftsprozesse für mehr Effizienz und Produktivität.",
+            icon: "Lightning",
+          },
+        ],
+      },
       pricing: {
         plans: [
           {

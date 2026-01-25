@@ -26,6 +26,50 @@ const ResetPasswordPage = lazy(
   () => import("@/components/pages/ResetPasswordPage")
 );
 
+// Lazy load service pages
+const WLANRouterPage = lazy(
+  () => import("@/components/pages/services/WLANRouterPage")
+);
+const MeshInstallationPage = lazy(
+  () => import("@/components/pages/services/MeshInstallationPage")
+);
+const LANVerlegungPage = lazy(
+  () => import("@/components/pages/services/LANVerlegungPage")
+);
+const AccessPointPage = lazy(
+  () => import("@/components/pages/services/AccessPointPage")
+);
+const PowerlinePage = lazy(
+  () => import("@/components/pages/services/PowerlinePage")
+);
+const WLANProblemsPage = lazy(
+  () => import("@/components/pages/services/WLANProblemsPage")
+);
+const ComputerSetupPage = lazy(
+  () => import("@/components/pages/services/ComputerSetupPage")
+);
+const DriverInstallationPage = lazy(
+  () => import("@/components/pages/services/DriverInstallationPage")
+);
+const PerformanceOptimizationPage = lazy(
+  () => import("@/components/pages/services/PerformanceOptimizationPage")
+);
+const PrinterInstallationPage = lazy(
+  () => import("@/components/pages/services/PrinterInstallationPage")
+);
+const MobileDeviceSetupPage = lazy(
+  () => import("@/components/pages/services/MobileDeviceSetupPage")
+);
+const PCRepairPage = lazy(
+  () => import("@/components/pages/services/PCRepairPage")
+);
+const BackupServicePage = lazy(
+  () => import("@/components/pages/services/BackupServicePage")
+);
+const BusinessAutomationPage = lazy(
+  () => import("@/components/pages/services/BusinessAutomationPage")
+);
+
 // Loading component
 function PageLoader() {
   return (
@@ -58,12 +102,54 @@ function pathToPage(path: string): string {
   if (cleanPath === "/verify-email") return "verify-email";
   if (cleanPath === "/request-password-reset") return "request-password-reset";
   if (cleanPath === "/reset-password") return "reset-password";
+  
+  // Service routes - Network Configuration
+  if (cleanPath === "/services/netzwerk/wlan-router") return "service-wlan-router";
+  if (cleanPath === "/services/netzwerk/mesh") return "service-mesh";
+  if (cleanPath === "/services/netzwerk/lan-verlegung") return "service-lan-verlegung";
+  if (cleanPath === "/services/netzwerk/access-point") return "service-access-point";
+  if (cleanPath === "/services/netzwerk/powerline") return "service-powerline";
+  if (cleanPath === "/services/netzwerk/wlan-probleme") return "service-wlan-probleme";
+  
+  // Service routes - Device Setup
+  if (cleanPath === "/services/geraete/computer-setup") return "service-computer-setup";
+  if (cleanPath === "/services/geraete/treiber-installation") return "service-driver-installation";
+  if (cleanPath === "/services/geraete/performance-optimierung") return "service-performance-optimization";
+  if (cleanPath === "/services/geraete/drucker-installation") return "service-printer-installation";
+  if (cleanPath === "/services/geraete/handy-tablet") return "service-mobile-device-setup";
+  
+  // Service routes - Standalone
+  if (cleanPath === "/services/pc-reparatur") return "service-pc-repair";
+  if (cleanPath === "/services/backup-service") return "service-backup-service";
+  if (cleanPath === "/services/business-automation") return "service-business-automation";
+  
   return "home";
 }
 
 function pageToPath(page: string): string {
   if (page === "home") return "/";
   if (page === "datenschutz") return "/datenschutz";
+  
+  // Service routes - Network Configuration
+  if (page === "service-wlan-router") return "/services/netzwerk/wlan-router";
+  if (page === "service-mesh") return "/services/netzwerk/mesh";
+  if (page === "service-lan-verlegung") return "/services/netzwerk/lan-verlegung";
+  if (page === "service-access-point") return "/services/netzwerk/access-point";
+  if (page === "service-powerline") return "/services/netzwerk/powerline";
+  if (page === "service-wlan-probleme") return "/services/netzwerk/wlan-probleme";
+  
+  // Service routes - Device Setup
+  if (page === "service-computer-setup") return "/services/geraete/computer-setup";
+  if (page === "service-driver-installation") return "/services/geraete/treiber-installation";
+  if (page === "service-performance-optimization") return "/services/geraete/performance-optimierung";
+  if (page === "service-printer-installation") return "/services/geraete/drucker-installation";
+  if (page === "service-mobile-device-setup") return "/services/geraete/handy-tablet";
+  
+  // Service routes - Standalone
+  if (page === "service-pc-repair") return "/services/pc-reparatur";
+  if (page === "service-backup-service") return "/services/backup-service";
+  if (page === "service-business-automation") return "/services/business-automation";
+  
   return `/${page}`;
 }
 
@@ -125,6 +211,41 @@ function App() {
         return <RequestPasswordResetPage onNavigate={handleNavigate} />;
       case "reset-password":
         return <ResetPasswordPage onNavigate={handleNavigate} />;
+      
+      // Service pages - Network Configuration
+      case "service-wlan-router":
+        return <WLANRouterPage onNavigate={handleNavigate} />;
+      case "service-mesh":
+        return <MeshInstallationPage onNavigate={handleNavigate} />;
+      case "service-lan-verlegung":
+        return <LANVerlegungPage onNavigate={handleNavigate} />;
+      case "service-access-point":
+        return <AccessPointPage onNavigate={handleNavigate} />;
+      case "service-powerline":
+        return <PowerlinePage onNavigate={handleNavigate} />;
+      case "service-wlan-probleme":
+        return <WLANProblemsPage onNavigate={handleNavigate} />;
+      
+      // Service pages - Device Setup
+      case "service-computer-setup":
+        return <ComputerSetupPage onNavigate={handleNavigate} />;
+      case "service-driver-installation":
+        return <DriverInstallationPage onNavigate={handleNavigate} />;
+      case "service-performance-optimization":
+        return <PerformanceOptimizationPage onNavigate={handleNavigate} />;
+      case "service-printer-installation":
+        return <PrinterInstallationPage onNavigate={handleNavigate} />;
+      case "service-mobile-device-setup":
+        return <MobileDeviceSetupPage onNavigate={handleNavigate} />;
+      
+      // Service pages - Standalone
+      case "service-pc-repair":
+        return <PCRepairPage onNavigate={handleNavigate} />;
+      case "service-backup-service":
+        return <BackupServicePage onNavigate={handleNavigate} />;
+      case "service-business-automation":
+        return <BusinessAutomationPage onNavigate={handleNavigate} />;
+      
       default:
         return <HomePage onNavigate={handleNavigate} />;
     }
