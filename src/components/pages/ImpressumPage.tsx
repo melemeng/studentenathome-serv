@@ -31,7 +31,7 @@ export default function ImpressumPage() {
               <p>
                 <strong>Verantwortliche Person:</strong>
               </p>
-              <p>Studenten Helfen UG</p>
+              <p>Floatcraft UG</p>
               <p>
                 Peter-Vischer-Straße 8
                 <br />
@@ -54,6 +54,9 @@ export default function ImpressumPage() {
             </h2>
             <div className="space-y-2 text-sm leading-relaxed">
               <p>
+                <strong>Geschäftsführer:</strong> Linus Haddad
+              </p>
+              <p>
                 Die Geschäftsführung ist erreichbar unter den oben angegebenen
                 Kontaktdaten.
               </p>
@@ -71,14 +74,14 @@ export default function ImpressumPage() {
                 Berlin-Charlottenburg
               </p>
               <p>
-                <strong>Registrierungsnummer:</strong> HRB [Nummer]
+                <strong>Registrierungsnummer:</strong> HRB 270599 B
               </p>
               <p>
                 <strong>
                   Umsatzsteuer-Identifikationsnummer gemäß § 27 a
                   Umsatzsteuergesetz:
                 </strong>{" "}
-                DE [USt-Id]
+                DE364287642
               </p>
             </div>
           </section>
